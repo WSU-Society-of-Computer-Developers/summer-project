@@ -1,5 +1,11 @@
 {
   "trailingComma": "none",
   "semi": false,
-  "singleQuote": true
+  "singleQuote": true,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": "**/*.{js,jsx,ts,tsx,json,css,scss,md}"
+    }
+  ]
 }
