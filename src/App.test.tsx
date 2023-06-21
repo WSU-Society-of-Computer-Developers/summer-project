@@ -12,6 +12,8 @@ describe('<App />', () => {
       })
     ).toBeInTheDocument()
 
+    expect(screen.getByText(/It's going to be awesome./i)).toBeInTheDocument()
+
     expect(
       screen.getByRole('link', {
         name: /get started/i
