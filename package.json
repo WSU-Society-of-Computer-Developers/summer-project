@@ -14,6 +14,11 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.5",
+    "@mui/types": "^7.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
