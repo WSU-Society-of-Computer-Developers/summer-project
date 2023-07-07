@@ -1,5 +1,6 @@
 import { findAllByText, render, screen } from '@testing-library/react'
 import Nav from './Nav'
+import { routes } from '../routes'
 
 describe('<Nav />', () => {
   it('should render Navbar', () => {
@@ -17,5 +18,14 @@ describe('<Nav />', () => {
         name: /LOGO/i
       })
     ).toBeInTheDocument() // check if logo is rendered
+
+    // check if routes rendered correctly
+    routes.forEach((route) => {
+      expect(
+        screen.getByRole('link', {
+          name: route.name
+        })
+      ).toBeInTheDocument()
+    })
   })
 })

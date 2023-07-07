@@ -11,8 +11,8 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-
-// TODO: make dynamic routes
+import { Link } from 'react-router-dom'
+import { routes } from 'routes'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -89,11 +89,15 @@ function Nav() {
                 display: { xs: 'block', md: 'none' }
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {routes
+                .filter((route) => !route?.unlisted)
+                .map((route) => (
+                  <Link key={route.path} to={route.path}>
+                    <MenuItem onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{route.name}</Typography>
+                    </MenuItem>
+                  </Link>
+                ))}
             </Menu>
           </Box>
           <Typography
@@ -115,15 +119,18 @@ function Nav() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+            {routes
+              .filter((route) => !route?.unlisted)
+              .map((route) => (
+                <Link key={route.path} to={route.path}>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    {route.name}
+                  </Button>
+                </Link>
+              ))}
           </Box>
 
           {/* User Menu */}

@@ -1,7 +1,10 @@
+import React from 'react'
 import Footer from 'components/Footer'
 import Nav from 'components/Nav'
 import Home from 'pages/Home'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { routes } from 'routes'
+import Spinner from 'components/Spinner'
 
 function App() {
   return (
@@ -9,13 +12,17 @@ function App() {
       <BrowserRouter>
         <Nav />
         <div className="m-5 text-left ">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="*"
-              element={<h1 className="text-lg">404 - Not Found</h1>}
-            />
-          </Routes>
+          <React.Suspense fallback={<Spinner />}>
+            <Routes>
+              {routes.map((route) => (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={<route.component />}
+                />
+              ))}
+            </Routes>
+          </React.Suspense>
         </div>
         <Footer />
       </BrowserRouter>

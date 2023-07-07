@@ -11,6 +11,8 @@ interface TableProps {
   rows: any[]
 }
 
+// TODO: make cells (keys) dynamic
+
 export default function BasicTable({ rows }: TableProps) {
   return (
     <TableContainer component={Paper}>
