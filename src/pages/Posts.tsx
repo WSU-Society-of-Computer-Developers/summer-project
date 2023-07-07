@@ -1,28 +1,17 @@
 import BasicTable from 'components/BasicTable'
+import Spinner from 'components/Spinner'
 import React from 'react'
+import useSWR from 'swr'
+import { fetcher } from 'utils/api'
 
 function Posts() {
-  const [posts, setPosts] = React.useState<any[]>([])
-  React.useEffect(() => {
-    // get data from API
-    async function getData() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-      const posts = await response.json()
-      setPosts(posts)
-    }
-    getData()
-  }, [])
-
+  const { data, error, isLoading } = useSWR('/posts', fetcher)
+  if (error) return <div>Failed to load posts.</div>
   return (
     <>
       <div className="m-5">
         <h1 className="text-4xl font-bold text-gray-800">Posts</h1>
-        {/* <ol>
-          {posts.map((post) => (
-            <li key={post.id}>{post.title}</li>
-          ))}
-        </ol> */}
-        <BasicTable rows={posts} />
+        {isLoading ? <Spinner /> : <BasicTable rows={data} />}
       </div>
     </>
   )
