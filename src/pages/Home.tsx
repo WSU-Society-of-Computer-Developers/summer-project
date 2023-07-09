@@ -2,7 +2,7 @@ import React from 'react'
 
 function Home() {
   return (
-    <div>
+    <div data-testid="Home">
       <h1 className="text-4xl font-bold text-gray-800">SCD Summer Project</h1>
       <p className="my-4 text-lg text-gray-600">
         It&apos;s going to be awesome.
