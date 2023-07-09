@@ -9,23 +9,21 @@ import Spinner from 'components/Spinner'
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Nav />
-        <div className="m-5 text-left ">
-          <React.Suspense fallback={<Spinner />}>
-            <Routes>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={<route.component />}
-                />
-              ))}
-            </Routes>
-          </React.Suspense>
-        </div>
-        <Footer />
-      </BrowserRouter>
+      <Nav />
+      <div className="m-5 text-left ">
+        <React.Suspense fallback={<Spinner />}>
+          <Routes>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<route.component />}
+              />
+            ))}
+          </Routes>
+        </React.Suspense>
+      </div>
+      <Footer />
     </>
   )
 }
