@@ -19,12 +19,6 @@ export const routes: Route[] = [
     component: React.lazy(() => import('./pages/Posts'))
   },
   {
-    name: 'Post',
-    path: '/posts/:postid',
-    component: React.lazy(() => import('./pages/Post')),
-    unlisted: true
-  },
-  {
     name: '404',
     path: '*',
     component: React.lazy(() => import('./pages/NotFound')),

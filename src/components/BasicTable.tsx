@@ -6,7 +6,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { useNavigate } from 'react-router-dom'
 
 interface TableProps {
   rows: any[]
@@ -15,7 +14,6 @@ interface TableProps {
 // TODO: make cells (keys) dynamic
 
 export default function BasicTable({ rows }: TableProps) {
-  const navigate = useNavigate()
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -30,8 +28,10 @@ export default function BasicTable({ rows }: TableProps) {
             <TableRow
               key={row.id}
               onClick={() => {
-                // go to specific post page
-                navigate(`/posts/${row.id}`)
+                // go to post detail page
+                window.open(
+                  `https://jsonplaceholder.typicode.com/posts/${row.id}`
+                )
               }}
               className="cursor-pointer hover:bg-gray-100"
               sx={{
