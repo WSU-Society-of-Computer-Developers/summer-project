@@ -1,25 +1,46 @@
 version: "3.7"
 services:
-  api:
+  server:
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile.dev # change this to Dockerfile.prod for production
     stdin_open: true
     volumes:
-      - ./src:/usr/src/app/src
-    container_name: api
+      - ./server/src:/usr/src/app/src
+    container_name: server
     restart: always
     environment:
       - WATCHPACK_POLLING=true
     ports:
       - 5000:5000
+    env_file:
+      - ./server/.env
+    depends_on:
+      - redis
+      - pocketbase
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev # change this to Dockerfile.prod for production
+    stdin_open: true
+    volumes:
+      - ./client/src:/usr/src/app/src
+    container_name: client
+    restart: always
+    environment:
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - server
+    ports:
+      - 5173:5173 # change the port to 80 for production
   redis:
-    image: redis:alpine
+    image: redis:6.2-alpine
     container_name: redis
     restart: always
     ports:
       - 6379:6379
-      - 8001:8001
+    # volumes: 
+    #   - ./docker/cache:/data
   pocketbase:
     image: ghcr.io/muchobien/pocketbase:latest
     container_name: pocketbase
@@ -32,8 +53,8 @@ services:
     ports:
       - "8090:8090"
     volumes:
-      - ./docker/pb/data:/pb_data
-      - ./docker/pb/public:/pb_public #optional
+      - ./server/docker/pb/data:/pb_data
+      - ./server/docker/pb/public:/pb_public #optional
     healthcheck: #optional (recommended) since v0.10.0
       test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
       interval: 5s
