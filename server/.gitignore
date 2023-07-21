@@ -1,0 +1,6 @@
+dist/
+node_modules/
+.env
+docker/
+server/node_modules
+client/node_modules

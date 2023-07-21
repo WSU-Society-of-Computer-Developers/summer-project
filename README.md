@@ -17,9 +17,13 @@ It may seem a bit overwhelming to realize what you're getting yourself into, but
 
 ## Tooling
 
-This project was bootstrapped with [reactjs-vite-tailwindcss-boilerplate](https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate)
+<details>
+<summary>Tools</summary>
+<br>
 
-This project uses tools like:
+The client was bootstrapped with [reactjs-vite-tailwindcss-boilerplate](https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate)
+
+This client uses tools like:
 
 - [Vite](https://vitejs.dev)
 - [ReactJS](https://reactjs.org)
@@ -30,12 +34,40 @@ This project uses tools like:
 - [Eslint](https://eslint.org)
 - [Prettier](https://prettier.io)
 
+The server uses tools like:
+
+- [Express](https://expressjs.com/)
+- [TypeScript](https://www.typescriptlang.org)
+- [Jest](https://jestjs.io/)
+- [Supertest](https://github.com/ladjs/supertest)
+- [Pocketbase SDK](https://github.com/pocketbase/js-sdk)
+- [Docker](https://www.docker.com/)
+- [Redis](https://redis.io/)
+- [Pocketbase BaaS](https://pocketbase.io/)
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+<br>
+Backend architecture:
+
+![backend-architecture](/.github/imgs/backend.png)
+
+</details>
+
 ## Getting Started
 
 <details>
-<summary>Setup</summary>
+<summary>Running only frontend</summary>
 <br>
 
+### Prerequisites
+
+1. [Node.js](https://nodejs.org/en/download/)
+2. [Git](https://git-scm.com/downloads)
+
+<br>
 1. Clone the repository
 
 ```bash
@@ -43,6 +75,8 @@ This project uses tools like:
 git clone https://github.com/WSU-Society-of-Computer-Developers/summer-project
 # go to project folder
 cd summer-project
+# go to client folder
+cd client
 ```
 
 2. Install dependencies
@@ -54,47 +88,82 @@ npm install
 3. Run the dev environment
 
 ```bash
-# run this command everytime you want to start the dev server
+# run this command every time you want to start the dev server
 npm run dev
 ```
 
-Now the site shuld be up with hot reload @ <http://localhost:5173>.
+Now the site should be up with hot reload @ <http://localhost:5173>.
 
 </details>
 
 <details>
-<summary>Utilities</summary>
+<summary>Running entire dev environment</summary>
 <br>
 
-### Lint
+**YOU MUST HAVE [Docker](https://docs.docker.com/get-docker/) INSTALLED**
+
+### Prerequisites
+
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [Git](https://git-scm.com/downloads)
+
+<br>
+
+1. Clone the repository
 
 ```bash
-npm run lint
+# clone repo
+git clone https://github.com/WSU-Society-of-Computer-Developers/summer-project
+
+# go to project folder
+cd summer-project
 ```
 
-### Typecheck
+1. Create a `.env` file in `server/` folder with the following contents:
 
 ```bash
-npm run typecheck
+PORT=5000
+REDIS_URL=redis://redis:6379
+PB_URL=http://pocketbase:8090
+PB_ADMIN_USERNAME=get_from_discord
+PB_ADMIN_PASSWORD=get_from_discord
+NODE_ENV=development
+
 ```
 
-### Build
+> **NOTE:** Replace `get_from_discord` with the actual values from Discord in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1119060706453635204) channel
+
+1. Download the `pocketbase_data.zip` from Discord in the pinned message in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1130206254422294628) channel and extract it in the `summer-project/server` folder
+
+Your directory should now look like this:
+
+```
+summer-project/
+├─ client/
+├─ server/
+│  ├─ docker/
+│  │  ├─ pb/
+│  │  │  ├─ data/
+│  │  │  ┕ public/
+│  ├─ src/
+│  ┕ .env
+┕ docker-compose.yml
+```
+
+4. Run the dev environment
 
 ```bash
-npm run build
+# in the summer-project folder where the docker-compose.yml file is in, run:
+docker-compose up
 ```
 
-### Test
+> If you have any questions, please contact @ThatZiv
 
-```bash
-npm run test
-```
+You should be able to now:
 
-View and interact with your tests via UI.
-
-```bash
-npm run test:ui
-```
+* Access the frontend: <http://localhost:5173/>
+* Access the backend: <http://localhost:5000/api>
+* Access the Pocketbase admin panel: <http://localhost:8090/_/>
 
 </details>
 
