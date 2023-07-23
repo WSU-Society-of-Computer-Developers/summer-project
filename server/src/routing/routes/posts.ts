@@ -13,7 +13,7 @@ router.get("/", [cacheMiddleware({ key: 'posts', base: true, id: false })], asyn
   await client.expire(req.params.cacheKey, postsTTL);
 });
 
-router.get("/:id", [cacheMiddleware({ key: 'posts', base: true, id: false })],
+router.get("/:id", [cacheMiddleware({ key: 'posts', base: false, id: true })],
   async (req: Request, res: Response) => {
     if (!(JSON.parse(req.params.idIsValid) as Boolean)) {
       res.status(400).json({ error: "`postid` parameter is required" });
