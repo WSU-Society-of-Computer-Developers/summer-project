@@ -12,13 +12,17 @@ import { useInterval } from 'usehooks-ts'
 import jwtDecode from 'jwt-decode'
 import ms from 'ms'
 
-export const PB_URL = 'http://workstation.zav:8090'
-
 const PocketContext = createContext<PocketContextType>({
-  register: function (email: string, password: string): Promise<any> {
+  register: function (
+    email: LoginData.email,
+    password: LoginData.password
+  ): Promise<any> {
     throw new Error('Function not implemented.')
   },
-  login: function (email: string, password: string): Promise<any> {
+  login: function (
+    email: LoginData.email,
+    password: LoginData.password
+  ): Promise<any> {
     throw new Error('Function not implemented.')
   },
   logout: function (): void {
@@ -27,7 +31,7 @@ const PocketContext = createContext<PocketContextType>({
   user: null,
   token: null,
   pb: new PocketBase('')
-})
+}) // placeholder default values
 
 interface PocketContextProps {
   children: JSX.Element | JSX.Element[]
@@ -40,8 +44,10 @@ namespace LoginData {
 }
 
 export const PocketProvider = ({ children }: PocketContextProps) => {
+  // useMemo is used to caching the value of the pb instance itself
   const pb = useMemo(
-    () => new PocketBase(PB_URL || 'http://localhost:8090'),
+    () =>
+      new PocketBase(import.meta.env.VITE_PB_URL || 'http://localhost:8090'),
     []
   )
 
@@ -49,6 +55,7 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
   const [user, setUser] = useState(pb.authStore.model)
 
   useEffect(() => {
+    // pb.collection('users').authWithPassword('test@test.n', 'test123456')
     return pb.authStore.onChange((token, model) => {
       setToken(token)
       setUser(model)
@@ -64,6 +71,7 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     []
   )
 
+  // useCallback is used to caching the function itself
   const login = useCallback(
     async (email: LoginData.email, password: LoginData.password) => {
       return await pb.collection('users').authWithPassword(email, password)

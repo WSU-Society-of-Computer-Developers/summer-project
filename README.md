@@ -133,13 +133,21 @@ NODE_ENV=development
 
 > **NOTE:** Replace `get_from_discord` with the actual values from Discord in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1119060706453635204) channel
 
-1. Download the `pocketbase_data.zip` from Discord in the pinned message in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1130206254422294628) channel and extract it in the `summer-project/server` folder
+4. Create a `.env` file in `client/` folder with the following contents:
+
+```bash
+VITE_PB_URL=http://workstation.zav:8090
+```
+
+3. Download the `pocketbase_data.zip` from Discord in the pinned message in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1130206254422294628) channel and extract it in the `summer-project/server` folder
 
 Your directory should now look like this:
 
 ```
 summer-project/
 ├─ client/
+│  ├─ src/
+│  ├─ .env
 ├─ server/
 │  ├─ docker/
 │  │  ├─ pb/
@@ -161,9 +169,15 @@ docker-compose up
 
 You should be able to now:
 
-* Access the frontend: <http://localhost:5173/>
-* Access the backend: <http://localhost:5000/api>
-* Access the Pocketbase admin panel: <http://localhost:8090/_/>
+- Access the frontend: <http://localhost:5173/>
+- Access the backend: <http://localhost:5000/api>
+- Access the Pocketbase admin panel: <http://localhost:8090/_/>
+
+### Caveats
+
+- If you want to run the backend without docker, you will need to install [Redis](https://redis.io/) and [Node.js](https://nodejs.org/en/download/) and run them separately
+- Any changes in code for both the **client** and **server** outside their respective `src/` folder will require a docker image rebuild to reflect changes:
+  - `docker-compose up --build`
 
 </details>
 
