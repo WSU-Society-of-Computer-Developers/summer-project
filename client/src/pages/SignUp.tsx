@@ -34,7 +34,7 @@ function SignUp() {
       }
       alert("You're signed up!")
       // TODO: sign up in pb
-    } catch (error: unknown) {
+    } catch (error: any) {
       alert(error.message)
     }
   }
