@@ -2,6 +2,7 @@ import React from 'react'
 // import { MDCTextField } from '@material/textfield'
 import { Button, Container, TextField } from '@mui/material'
 import './SignUp.css'
+import { usePocket } from '../contexts/PocketContext'
 
 interface SignUpData {
   email: string
@@ -11,8 +12,8 @@ interface SignUpData {
 }
 
 function SignUp() {
-  // type for form event
-  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const { register } = usePocket()
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault() // prevents the page from refreshing after submit
     // Get the form values using FormData
     const formData = new FormData(event?.target)
@@ -32,9 +33,18 @@ function SignUp() {
       if (password.length < 8) {
         throw new Error('Password must be at least 8 characters')
       }
-      alert("You're signed up!")
-      // TODO: sign up in pb
+      await register(email, password) // TODO: remove username from register
+      alert("You're signed up!") // TODO: toast notifications (react-toastify)
     } catch (error: any) {
+      if (error.data instanceof Object) {
+        // checks if its a pocketbase error
+        const errors = Object.values(error.data.data) as unknown as Array<{
+          code: string
+          message: string
+        }>
+        alert(errors[0].message)
+        return
+      }
       alert(error.message)
     }
   }
