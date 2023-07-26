@@ -54,27 +54,27 @@ function SignUp() {
         <h2>To register, please enter the following information</h2>
       </header>
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
-      <Container className="info-container">
+      <Container maxWidth="sm" className="info-container secondary">
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email Address"
             name="email"
             variant="standard"
             color="secondary"
-          />
-          <TextField label="Username" name="username" variant="standard" />
+          /><br />
+          <TextField label="Username" name="username" variant="standard" /> <br />
           <TextField
             label="Password"
             name="password"
             type="password"
             variant="standard"
-          />
+          /><br />
           <TextField
             label="Confirm Password"
             name="confirmPassword"
             type="password"
             variant="standard"
-          />
+          /><br />
           <Button variant="contained" type="submit">
             Submit
           </Button>

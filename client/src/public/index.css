@@ -1,18 +1,25 @@
+/* TODO: work as much of this into tailwind as possible */
+
+/*
+Current color palette:
+Primary: #0c543e
+Secondary: #0C5449
+Text: #FFFFFF
+*/
+
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  background-color: #181b1d;
+  background-color: #1d1a18;
   color: #fff;
   margin: auto;
 
 }
 
 .info-container {
-  background-color: #8e9192;
-  width: 50%;
   margin-top: 10px;
   border-radius: 5px;
   text-align: center;
@@ -28,4 +35,8 @@ footer {
   bottom: 0;
   left: 0;
   width: 98%;
+}
+
+.secondary {
+  background-color: #1b5e39;
 }
