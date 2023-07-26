@@ -14,12 +14,15 @@ import MenuItem from '@mui/material/MenuItem'
 import { Link } from 'react-router-dom'
 import { routes } from 'routes'
 import { usePocket } from 'contexts/PocketContext'
+import Spinner from './Spinner'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 function Nav() {
-  const { user, logout } = usePocket()
+  const { user, logout, login } = usePocket()
+
+  const [loading, setLoading] = React.useState(false)
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -137,7 +140,7 @@ function Nav() {
           </Box>
 
           {/* User Menu */}
-          {user && (
+          {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -186,6 +189,30 @@ function Nav() {
                 </MenuItem>
               </Menu>
             </Box>
+          ) : loading ? (
+            <Spinner />
+          ) : (
+            <Button
+              onClick={async () => {
+                try {
+                  const email = prompt('Please enter your email')
+                  const password = prompt('Please enter your password')
+                  if (!email || !password) {
+                    throw new Error('Please fill out all fields')
+                  }
+                  setLoading(true)
+                  await login(email, password)
+                  alert('Login successful') // TODO: change this to toast notif
+                } catch (error: any) {
+                  alert(error.message)
+                } finally {
+                  setLoading(false)
+                }
+              }}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Login
+            </Button>
           )}
         </Toolbar>
       </Container>

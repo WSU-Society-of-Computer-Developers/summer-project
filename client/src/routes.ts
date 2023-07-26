@@ -24,10 +24,12 @@ export const routes: Route[] = [
     component: React.lazy(() => import('./pages/Post')),
     unlisted: true
   },
-  { // TODO: add a button matching this route
-    name:'SignUp',
-    path:'/signup',
-    component: React.lazy(() => import('./pages/SignUp'))
+  {
+    // TODO: add a button matching this route
+    name: 'SignUp',
+    path: '/signup',
+    component: React.lazy(() => import('./pages/SignUp')),
+    unlisted: true
   },
   {
     name: '404',
