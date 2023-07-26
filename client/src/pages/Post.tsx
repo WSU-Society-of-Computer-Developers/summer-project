@@ -43,7 +43,7 @@ function Post() {
         caption={userData.name}
         body={postData.body}
       />
-      <h2 className="mt-3 text-4xl font-bold text-gray-800">Comments</h2>
+      <h2 className="mt-3 text-4xl font-bold text-white">Comments</h2>
       <List>
         {commentsData.map((comment: any) => (
           <ListItem
@@ -52,7 +52,7 @@ function Post() {
               // Not implemented yet (will have to do this on our end later)
             }}
             key={comment.id}
-            className="cursor-pointer hover:bg-gray-100"
+            className="cursor-pointer hover:bg-gray-800"
           >
             <ListItemAvatar>
               <Avatar

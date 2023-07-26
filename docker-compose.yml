@@ -27,6 +27,8 @@ services:
       - ./client/src:/usr/src/app/src
     container_name: client
     restart: always
+    env_file:
+      - ./client/.env
     environment:
       - WATCHPACK_POLLING=true
     depends_on:

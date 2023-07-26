@@ -4,7 +4,22 @@ html {
 }
 
 body {
+  background-color: #181b1d;
+  color: #fff;
   margin: auto;
+
+}
+
+.info-container {
+  background-color: #8e9192;
+  width: 50%;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+header {
+  text-align: center;
 }
 
 footer {
