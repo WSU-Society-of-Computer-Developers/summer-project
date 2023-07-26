@@ -11,6 +11,10 @@ import PocketBase, { BaseAuthStore } from 'pocketbase'
 import { useInterval } from 'usehooks-ts'
 import jwtDecode from 'jwt-decode'
 import ms from 'ms'
+import Spinner from 'components/Spinner'
+import { Route, Routes } from 'react-router-dom'
+import { vagueFetcher } from 'utils/api'
+import useSWR from 'swr'
 
 const PocketContext = createContext<PocketContextType>({
   register: function (
@@ -51,8 +55,14 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     []
   )
 
+  const isDev = useMemo(() => import.meta.env.MODE === 'development', [])
   const [token, setToken] = useState(pb.authStore.token)
   const [user, setUser] = useState(pb.authStore.model)
+  const { data, error, isLoading } = useSWR(
+    (import.meta.env.VITE_PB_URL || 'http://localhost:8090') + '/api/health',
+    vagueFetcher
+  )
+  // TODO: do we want blocking behavior for waiting on the backend on initial load? (landing page like fb?)
 
   useEffect(() => {
     // pb.collection('users').authWithPassword('test@test.n', 'test123456')
@@ -99,7 +109,28 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     <PocketContext.Provider
       value={{ register, login, logout, user, token, pb }}
     >
-      {children}
+      {isLoading ? (
+        <Spinner />
+      ) : error ? (
+        <Routes>
+          <Route
+            path="*"
+            element={
+              <div className="m-5 text-center">
+                <h1 className="text-5xl ">Uh oh.</h1>
+                <br />
+                <p>
+                  {isDev
+                    ? 'Cannot connect to backend. Make sure you are running the pocketbase server with the correct VITE_PB_URL env variable set (check readme)'
+                    : 'Something went wrong :('}
+                </p>
+              </div>
+            }
+          />
+        </Routes>
+      ) : (
+        children
+      )}
     </PocketContext.Provider>
   )
 }
