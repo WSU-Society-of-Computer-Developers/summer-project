@@ -2,6 +2,19 @@ import React from 'react'
 // import { MDCTextField } from '@material/textfield'
 import { Button, Container, TextField } from '@mui/material'
 import { usePocket } from '../contexts/PocketContext'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+
+// TODO: Extract to a separate file when we settle on our color palette
+const theme = createTheme ({
+  palette: {
+    primary: {
+      main: "#FFF",
+    },
+    secondary: {
+      main: "#000",
+    }
+  },
+});
 
 interface SignUpData {
   email: string
@@ -53,13 +66,13 @@ function SignUp() {
         <h2>To register, please enter the following information</h2>
       </header>
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
+      <ThemeProvider theme={theme}>
       <Container maxWidth="xs" className="info-container secondary p-2">
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email Address"
             name="email"
             variant="standard"
-            color="secondary"
           /><br />
           <TextField
             label="Confirm Email"
@@ -81,6 +94,7 @@ function SignUp() {
           </div>
         </form>
       </Container>
+      </ThemeProvider>
     </>
   )
 }
