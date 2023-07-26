@@ -2,7 +2,8 @@
 
 import axios from 'axios'
 
-export const baseURL = 'https://jsonplaceholder.typicode.com'
+export const baseURL =
+  (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api'
 
 export const vagueFetcher = (...args: any) =>
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

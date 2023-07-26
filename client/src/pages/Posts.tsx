@@ -12,7 +12,7 @@ function Posts() {
       <div data-testid="Posts">
         <div className="m-5">
           <h1 className="text-4xl font-bold text-white">Posts</h1>
-          {isLoading ? <Spinner /> : <BasicTable rows={data} />}
+          {isLoading ? <Spinner /> : <BasicTable rows={data?.body} />}
         </div>
       </div>
     </>
