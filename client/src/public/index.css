@@ -1,9 +1,7 @@
-/* TODO: work as much of this into tailwind as possible */
-
 /*
 Current color palette:
 Primary: #0c543e
-Secondary: #0C5449
+Secondary: #1b5e39
 Text: #FFFFFF
 */
 
@@ -38,5 +36,5 @@ footer {
 }
 
 .secondary {
-  background-color: #1b5e39;
+  background-color: #1b5e2f;
 }

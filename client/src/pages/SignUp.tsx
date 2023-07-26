@@ -5,9 +5,8 @@ import { usePocket } from '../contexts/PocketContext'
 
 interface SignUpData {
   email: string
-  username: string
+  confirmEmail: string
   password: string
-  confirmPassword: string
 }
 
 function SignUp() {
@@ -17,22 +16,22 @@ function SignUp() {
     // Get the form values using FormData
     const formData = new FormData(event?.target)
 
-    const { username, email, password, confirmPassword } = Object.fromEntries(
+    const { email, password, confirmEmail } = Object.fromEntries(
       formData.entries()
     ) as unknown as SignUpData
     // validation logic:
     // TODO: move all this logic to a separate file (utils?)
     try {
-      if (!username || !email || !password || !confirmPassword) {
+      if (!email || !password || !confirmEmail) {
         throw new Error('Please fill out all fields')
       }
-      if (password !== confirmPassword) {
-        throw new Error('Passwords do not match')
+      if (email !== confirmEmail) {
+        throw new Error('Emails do not match')
       }
       if (password.length < 8) {
         throw new Error('Password must be at least 8 characters')
       }
-      await register(email, password) // TODO: remove username from register
+      await register(email, password)
       alert("You're signed up!") // TODO: toast notifications (react-toastify)
     } catch (error: any) {
       if (error.data instanceof Object) {
@@ -54,7 +53,7 @@ function SignUp() {
         <h2>To register, please enter the following information</h2>
       </header>
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
-      <Container maxWidth="sm" className="info-container secondary">
+      <Container maxWidth="xs" className="info-container secondary p-2">
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email Address"
@@ -62,22 +61,24 @@ function SignUp() {
             variant="standard"
             color="secondary"
           /><br />
-          <TextField label="Username" name="username" variant="standard" /> <br />
+          <TextField
+            label="Confirm Email"
+            name="confirmEmail"
+            variant="standard"
+          /><br />
           <TextField
             label="Password"
             name="password"
             type="password"
             variant="standard"
           /><br />
-          <TextField
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            variant="standard"
-          /><br />
-          <Button variant="contained" type="submit">
-            Submit
-          </Button>
+          <div className="text-right">
+            {/* TODO: make this button work */}
+            <Button variant="text">Sign in</Button>
+            <Button variant="contained" type="submit">
+              Submit
+            </Button>
+          </div>
         </form>
       </Container>
     </>
