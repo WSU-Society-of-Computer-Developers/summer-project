@@ -1,7 +1,6 @@
 import React from 'react'
 // import { MDCTextField } from '@material/textfield'
 import { Button, Container, TextField } from '@mui/material'
-import './SignUp.css'
 import { usePocket } from '../contexts/PocketContext'
 
 interface SignUpData {
@@ -51,7 +50,7 @@ function SignUp() {
   return (
     <>
       <header>
-        <h1 className="text-4xl font-bold">Sign Up to ByteBound WSU</h1>
+        <h1 className="mb-7 text-4xl font-bold">Sign Up to ByteBound WSU</h1>
         <h2>To register, please enter the following information</h2>
       </header>
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
