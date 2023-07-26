@@ -141,7 +141,15 @@ function Nav() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user.email} src={user.avatar} />
+                  <Avatar
+                    alt={user.email}
+                    variant="square"
+                    src={
+                      user!.avatar
+                        ? user.avatar
+                        : `https://api.dicebear.com/6.x/identicon/png?seed=${user.email}`
+                    }
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
