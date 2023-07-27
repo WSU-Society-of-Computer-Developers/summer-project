@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { pbFetchers } from 'utils/api'
+import { fetcher, pbFetchers } from 'utils/api'
 import useSWR from 'swr'
 import {
   Avatar,
@@ -20,16 +20,9 @@ function Post() {
   const { pb } = usePocket()
 
   const navigate = useNavigate()
-  const { data, error } = useSWR(
-    {
-      pb,
-      collection: 'posts',
-      id: postid,
-      query: { expand: 'author,comments.author,likes' }
-    },
-    pbFetchers.getOne
-  )
+  const { data, error } = useSWR('/posts/' + postid, fetcher)
 
+  if (error) return <div>Failed to load post.</div>
   if (!data)
     // wait until all data is loaded
     return (
@@ -37,8 +30,7 @@ function Post() {
         <div style={{ paddingTop: '15%' }} />
       </Skeleton>
     )
-  if (error) return <div>Failed to load post.</div>
-  const postData = data as unknown as PostType
+  const postData = data.body as unknown as PostType
   const comments = postData.expand?.comments
   return (
     <>

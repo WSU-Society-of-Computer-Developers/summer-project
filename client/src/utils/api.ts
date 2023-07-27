@@ -15,6 +15,15 @@ export const fetcher = (url: string) =>
   axios.get(baseURL + url).then((res) => res.data)
 
 export const pbFetchers = {
+  /** @example
+  {
+      pb,
+      collection: 'posts',
+      id: postid,
+      query: { expand: 'author,comments.author,likes' }
+    },
+    pbFetchers.getOne
+  */
   getOne: ({
     pb,
     collection,

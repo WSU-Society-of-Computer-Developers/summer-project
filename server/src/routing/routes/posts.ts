@@ -10,13 +10,17 @@ router.get(
   [cacheMiddleware({ key: "posts", base: true, id: false })],
   async (req: Request, res: Response) => {
     const postsTTL = 60;
-    const data = await pb.collection("posts").getFullList({
-      sort: "-created",
-      expand: "comments,likes,comments.author",
-    });
-    res.status(200).json({ body: data });
-    await client.set(req.params.cacheKey, JSON.stringify(data));
-    await client.expire(req.params.cacheKey, postsTTL);
+    try {
+      const data = await pb.collection("posts").getFullList({
+        sort: "-created",
+        expand: "likes,author",
+      });
+      res.status(200).json({ body: data });
+      await client.set(req.params.cacheKey, JSON.stringify(data));
+      await client.expire(req.params.cacheKey, postsTTL);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
   }
 );
 
@@ -30,13 +34,17 @@ router.get(
     }
     const postid = req.params.id;
     const postTTL = 60;
-    const data = await pb
-      .collection("posts")
-      .getOne(postid, { expand: "author,comments.author,likes" });
-    // TODO: its not finding it
-    res.status(200).json({ body: data });
-    await client.set(req.params.cacheKey, JSON.stringify(data));
-    await client.expire(req.params.cacheKey, postTTL);
+    try {
+      const data = await pb
+        .collection("posts")
+        .getOne(postid, { expand: "author,comments.author,likes" });
+      // TODO: its not finding it
+      res.status(200).json({ body: data });
+      await client.set(req.params.cacheKey, JSON.stringify(data));
+      await client.expire(req.params.cacheKey, postTTL);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
   }
 );
 

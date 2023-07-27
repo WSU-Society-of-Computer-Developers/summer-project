@@ -39,7 +39,7 @@ export default function BasicTable({ rows }: TableProps) {
               }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.expand.author?.name || row.expand.author?.email || ''}
               </TableCell>
               <TableCell>{row.title}</TableCell>
             </TableRow>
