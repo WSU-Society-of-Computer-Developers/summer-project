@@ -3,15 +3,20 @@ import React from 'react'
 import { Button, Container, TextField } from '@mui/material'
 import { usePocket } from '../contexts/PocketContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-
+/*
+19a993
+7cac6c - buttons?
+e1c547
+da81b0
+*/
 // TODO: Extract to a separate file when we settle on our color palette
 const theme = createTheme ({
   palette: {
     primary: {
-      main: "#FFF",
+      main: "#7cac6c",
     },
     secondary: {
-      main: "#000",
+      main: "#E1C547",
     }
   },
 });

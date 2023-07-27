@@ -1,18 +1,12 @@
-/*
-Current color palette:
-Primary: #0c543e
-Secondary: #1b5e39
-Text: #FFFFFF
-*/
-
 html {
   position: relative;
   min-height: 100%;
 }
 
+/* TODO: consider gradient for the background */
 body {
-  background-color: #1d1a18;
-  color: #fff;
+  background-color: #11221B;
+  color: #F7FCD7;
   margin: auto;
 }
 
@@ -35,5 +29,5 @@ footer {
 }
 
 .secondary {
-  background-color: #1b5e2f;
+  background-color: #0C5449;
 }
