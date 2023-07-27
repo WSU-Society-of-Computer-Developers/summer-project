@@ -1,12 +1,12 @@
 // https://mui.com/material-ui/react-card/
 import * as React from 'react'
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Share } from '@mui/icons-material'
+import { Share, ThumbUpSharp } from '@mui/icons-material'
+import { usePocket } from 'contexts/PocketContext'
 
 interface BasicCardProps {
   title: string
@@ -21,6 +21,7 @@ export default function BasicCard({
   body,
   children
 }: BasicCardProps) {
+  const { user } = usePocket()
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
@@ -36,13 +37,20 @@ export default function BasicCard({
       </CardContent>
       <CardActions>
         {children}
+        {user && (
+          <Button size="small">
+            <ThumbUpSharp />
+            &nbsp;Like
+          </Button>
+        )}
         <Button
           onClick={() => {
             navigator.share({ url: window.location.href }) // THIS WILL ONLY WORK ON HTTPS
           }}
           size="small"
         >
-          <Share /> Share
+          <Share />
+          &nbsp;Share
         </Button>
       </CardActions>
     </Card>

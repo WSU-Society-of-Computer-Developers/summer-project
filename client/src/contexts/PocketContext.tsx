@@ -13,8 +13,24 @@ import jwtDecode from 'jwt-decode'
 import ms from 'ms'
 import Spinner from 'components/Spinner'
 import { Route, Routes } from 'react-router-dom'
-import { pbURL, vagueFetcher } from 'utils/api'
+import { pbURL, vagueFetcher, posts as PostActions } from 'utils/api'
 import useSWR from 'swr'
+
+interface PocketContextType {
+  // write type def here for all the functions you want to expose
+  register: (
+    email: LoginData.email,
+    password: LoginData.password
+  ) => Promise<any>
+  login: (email: LoginData.email, password: LoginData.password) => Promise<any>
+  logout: () => void
+  api: {
+    posts: PostActions
+  }
+  user: BaseAuthStore['model'] | null
+  token: string | null
+  pb: PocketBase
+}
 
 const PocketContext = createContext<PocketContextType>({
   register: function (
@@ -31,6 +47,9 @@ const PocketContext = createContext<PocketContextType>({
   },
   logout: function (): void {
     throw new Error('Function not implemented.')
+  },
+  api: {
+    posts: new PostActions(new PocketBase())
   },
   user: null,
   token: null,
@@ -68,6 +87,7 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     })
   }, [])
 
+  // user actions
   const register = useCallback(
     async (email: LoginData.email, password: LoginData.password) => {
       return await pb
@@ -89,6 +109,10 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     pb.authStore.clear()
   }, [])
 
+  const api = useMemo(() => {
+    return { posts: new PostActions(pb) }
+  }, [pb])
+
   // proactively refresh token
   const refreshSession = useCallback(async () => {
     if (!pb.authStore.isValid) return
@@ -103,7 +127,7 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
   useInterval(refreshSession, token ? ms('2 minutes') : null)
   return (
     <PocketContext.Provider
-      value={{ register, login, logout, user, token, pb }}
+      value={{ register, login, logout, api, user, token, pb }}
     >
       {isLoading ? (
         <Spinner />
@@ -129,19 +153,6 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
       )}
     </PocketContext.Provider>
   )
-}
-
-interface PocketContextType {
-  // write type def here for all the functions you want to expose
-  register: (
-    email: LoginData.email,
-    password: LoginData.password
-  ) => Promise<any>
-  login: (email: LoginData.email, password: LoginData.password) => Promise<any>
-  logout: () => void
-  user: BaseAuthStore['model'] | null
-  token: string | null
-  pb: PocketBase
 }
 
 export const usePocket = () => useContext<PocketContextType>(PocketContext)

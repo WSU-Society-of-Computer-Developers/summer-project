@@ -1,9 +1,8 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { fetcher, pbFetchers } from 'utils/api'
+import { fetcher } from 'utils/api'
 import useSWR from 'swr'
 import {
-  Avatar,
   List,
   ListItem,
   ListItemAvatar,
