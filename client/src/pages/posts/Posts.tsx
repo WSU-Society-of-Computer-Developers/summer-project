@@ -30,7 +30,7 @@ function Posts() {
         navigate('/posts/' + post.id)
       } catch (error: any | ClientResponseError) {
         const { issues, message } = parseError(error)
-        if (issues) {
+        if (issues.length > 0) {
           alert(issues.join('\n'))
         } else {
           alert(message)

@@ -5,13 +5,15 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Share, ThumbUpSharp } from '@mui/icons-material'
+import { Edit, Share, ThumbUpSharp } from '@mui/icons-material'
 import { usePocket } from 'contexts/PocketContext'
+import { UserType } from 'types/User'
 
 interface BasicCardProps {
   title: string
   caption: string
   body: string
+  author: UserType
   children?: JSX.Element | JSX.Element[]
 }
 
@@ -19,6 +21,7 @@ export default function BasicCard({
   title,
   caption,
   body,
+  author,
   children
 }: BasicCardProps) {
   const { user } = usePocket()
@@ -41,6 +44,12 @@ export default function BasicCard({
           <Button size="small">
             <ThumbUpSharp />
             &nbsp;Like
+          </Button>
+        )}
+        {user?.id == author.id && (
+          <Button size="small">
+            <Edit />
+            &nbsp;Edit
           </Button>
         )}
         <Button

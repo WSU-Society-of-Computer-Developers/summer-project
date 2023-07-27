@@ -37,6 +37,10 @@ function Post() {
     <>
       <BasicCard
         title={postData.title}
+        // TODO: migrate to display fields instead of expansions
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        author={postData.expand.author}
         caption={
           postData.expand.author?.name || postData.expand.author?.email || ''
         }
