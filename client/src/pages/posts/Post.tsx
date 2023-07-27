@@ -14,6 +14,7 @@ import BasicCard from 'components/BasicCard'
 import { usePocket } from 'contexts/PocketContext'
 import { CommentType } from 'types/Comment'
 import { PostType } from 'types/Post'
+import { getAvatarURL } from 'utils'
 
 function Post() {
   const { postid } = useParams()
@@ -43,7 +44,7 @@ function Post() {
       />
       <h2 className="mt-3 text-4xl font-bold text-white">Comments</h2>
       <List>
-        {comments &&
+        {comments ? (
           comments.map((comment: CommentType) => (
             <ListItem
               onClick={() => {
@@ -57,7 +58,7 @@ function Post() {
                 <Avatar
                   alt={comment.expand.author.email}
                   variant="rounded"
-                  src={`https://api.dicebear.com/6.x/identicon/png?seed=${comment.expand.author.email}`}
+                  src={getAvatarURL(comment.expand.author)}
                 />
               </ListItemAvatar>
               <ListItemText>
@@ -65,7 +66,10 @@ function Post() {
                 <div dangerouslySetInnerHTML={{ __html: comment.content }} />
               </ListItemText>
             </ListItem>
-          ))}
+          ))
+        ) : (
+          <div>No comments yet!</div>
+        )}
       </List>
     </>
   )

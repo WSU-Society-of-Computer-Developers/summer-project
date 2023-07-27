@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import { routes } from 'routes'
 import { usePocket } from 'contexts/PocketContext'
 import Spinner from './Spinner'
+import { getAvatarURL } from 'utils'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -147,11 +148,7 @@ function Nav() {
                   <Avatar
                     alt={user.email}
                     variant="square"
-                    src={
-                      user!.avatar
-                        ? user.avatar
-                        : `https://api.dicebear.com/6.x/identicon/png?seed=${user.email}`
-                    }
+                    src={getAvatarURL(user)}
                   />
                 </IconButton>
               </Tooltip>

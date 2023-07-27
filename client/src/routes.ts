@@ -16,12 +16,23 @@ export const routes: Route[] = [
   {
     name: 'Posts',
     path: '/posts',
-    component: React.lazy(() => import('./pages/Posts'))
+    component: React.lazy(() => import('./pages/posts/Posts'))
   },
   {
     name: 'Post',
     path: '/posts/:postid',
-    component: React.lazy(() => import('./pages/Post')),
+    component: React.lazy(() => import('./pages/posts/Post')),
+    unlisted: true
+  },
+  {
+    name: 'Users',
+    path: '/users',
+    component: React.lazy(() => import('./pages/users/Users'))
+  },
+  {
+    name: 'User',
+    path: '/users/:userid',
+    component: React.lazy(() => import('./pages/users/User')),
     unlisted: true
   },
   {

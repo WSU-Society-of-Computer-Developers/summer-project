@@ -13,7 +13,7 @@ import jwtDecode from 'jwt-decode'
 import ms from 'ms'
 import Spinner from 'components/Spinner'
 import { Route, Routes } from 'react-router-dom'
-import { vagueFetcher } from 'utils/api'
+import { pbURL, vagueFetcher } from 'utils/api'
 import useSWR from 'swr'
 
 const PocketContext = createContext<PocketContextType>({
@@ -49,11 +49,7 @@ namespace LoginData {
 
 export const PocketProvider = ({ children }: PocketContextProps) => {
   // useMemo is used to caching the value of the pb instance itself
-  const pb = useMemo(
-    () =>
-      new PocketBase(import.meta.env.VITE_PB_URL || 'http://localhost:8090'),
-    []
-  )
+  const pb = useMemo(() => new PocketBase(pbURL), [])
 
   const isDev = useMemo(() => import.meta.env.MODE === 'development', [])
   const [token, setToken] = useState(pb.authStore.token)

@@ -6,6 +6,8 @@ import PocketBase, { BaseQueryParams } from 'pocketbase'
 export const baseURL =
   (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api'
 
+export const pbURL = import.meta.env.VITE_PB_URL || 'http://localhost:8090'
+
 export const vagueFetcher = (...args: any) =>
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore-next-line

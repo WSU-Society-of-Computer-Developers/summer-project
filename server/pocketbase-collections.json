@@ -1,5 +1,133 @@
 [
     {
+        "id": "w5pqjovsuoaj6q2",
+        "name": "posts",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "hevcmivp",
+                "name": "author",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": []
+                }
+            },
+            {
+                "id": "gdwpebkm",
+                "name": "title",
+                "type": "text",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "upeibvic",
+                "name": "content",
+                "type": "editor",
+                "system": false,
+                "required": false,
+                "options": {}
+            },
+            {
+                "id": "1333vunx",
+                "name": "comments",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "3bw4mp1iuskv808",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": null,
+                    "displayFields": []
+                }
+            },
+            {
+                "id": "lvwlmm7t",
+                "name": "likes",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": null,
+                    "displayFields": []
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "@request.auth.id != \"\"",
+        "viewRule": "@request.auth.id != \"\"",
+        "createRule": null,
+        "updateRule": null,
+        "deleteRule": null,
+        "options": {}
+    },
+    {
+        "id": "3bw4mp1iuskv808",
+        "name": "comments",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "kisk9yqo",
+                "name": "content",
+                "type": "editor",
+                "system": false,
+                "required": false,
+                "options": {}
+            },
+            {
+                "id": "pgqf7tot",
+                "name": "author",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": []
+                }
+            },
+            {
+                "id": "wk4f2jww",
+                "name": "likes",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": null,
+                    "displayFields": []
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "",
+        "viewRule": "",
+        "createRule": "@request.auth.id != \"\"",
+        "updateRule": null,
+        "deleteRule": null,
+        "options": {}
+    },
+    {
         "id": "_pb_users_auth_",
         "name": "users",
         "type": "auth",
@@ -40,7 +168,7 @@
         ],
         "indexes": [],
         "listRule": "id = @request.auth.id",
-        "viewRule": "id = @request.auth.id",
+        "viewRule": "",
         "createRule": "",
         "updateRule": "id = @request.auth.id",
         "deleteRule": "id = @request.auth.id",
@@ -54,54 +182,5 @@
             "onlyEmailDomains": null,
             "requireEmail": false
         }
-    },
-    {
-        "id": "w5pqjovsuoaj6q2",
-        "name": "posts",
-        "type": "base",
-        "system": false,
-        "schema": [
-            {
-                "id": "hevcmivp",
-                "name": "author",
-                "type": "relation",
-                "system": false,
-                "required": false,
-                "options": {
-                    "collectionId": "_pb_users_auth_",
-                    "cascadeDelete": false,
-                    "minSelect": null,
-                    "maxSelect": 1,
-                    "displayFields": []
-                }
-            },
-            {
-                "id": "gdwpebkm",
-                "name": "title",
-                "type": "text",
-                "system": false,
-                "required": false,
-                "options": {
-                    "min": null,
-                    "max": null,
-                    "pattern": ""
-                }
-            },
-            {
-                "id": "upeibvic",
-                "name": "content",
-                "type": "editor",
-                "system": false,
-                "required": false,
-                "options": {}
-            }
-        ],
-        "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
-        "options": {}
     }
 ]
