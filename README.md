@@ -82,8 +82,8 @@ cd client
 2. Create a `.env` file in `client/` folder with the following contents:
 
 ```bash
-VITE_PB_URL=http://localhost:8090
-VITE_API_URL=http://localhost:5000
+VITE_PB_URL=https://pb-temp1.zavaar.net
+VITE_API_URL=https://dev-temp1.zavaar.net
 ```
 
 3. Install dependencies

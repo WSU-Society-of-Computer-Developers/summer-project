@@ -30,7 +30,9 @@ export default function BasicCard({
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {caption}
         </Typography>
-        <Typography variant="body2">{body}</Typography>
+        <Typography variant="body2">
+          <div dangerouslySetInnerHTML={{ __html: body }} />
+        </Typography>
       </CardContent>
       <CardActions>
         {children}
