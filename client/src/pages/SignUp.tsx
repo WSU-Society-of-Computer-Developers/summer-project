@@ -1,14 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 // import { MDCTextField } from '@material/textfield'
 import { Button, Container, TextField } from '@mui/material'
 import { usePocket } from '../contexts/PocketContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-/*
-19a993
-7cac6c - buttons?
-e1c547
-da81b0
-*/
+
 // TODO: Extract to a separate file when we settle on our color palette
 const theme = createTheme ({
   palette: {
@@ -28,6 +23,12 @@ interface SignUpData {
 }
 
 function SignUp() {
+  // Method for rendering log in/sign up info
+  const [isSigningUp, setContentVisible] = useState(true);
+  const handleToggleForm = () => {
+    setContentVisible((prevVisible) => !prevVisible);
+  };
+
   const { register } = usePocket()
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault() // prevents the page from refreshing after submit
@@ -73,7 +74,7 @@ function SignUp() {
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
       <ThemeProvider theme={theme}>
       <Container maxWidth="xs" className="info-container secondary p-2">
-        <form onSubmit={handleSubmit}>
+        {isSigningUp ? (<form onSubmit={handleSubmit}> {/*Sign up content */}
           <TextField
             label="Email Address"
             name="email"
@@ -91,15 +92,34 @@ function SignUp() {
             variant="standard"
           /><br />
           <div className="text-right">
-            {/* TODO: make this button work */}
-            <Button variant="text">Sign in</Button>
+            <Button onClick={handleToggleForm} variant="text">Log in</Button>
+            <Button variant="contained" type="submit">
+              Submit
+            </Button>
+          </div>
+        </form>) : ( <form onSubmit={handleSubmit}> {/*Log in content */}
+          <TextField
+            label="Email Address"
+            name="email"
+            variant="standard"
+          /><br />
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            variant="standard"
+          /><br />
+          <div className="text-right">
+            <Button onClick={handleToggleForm} variant="text">Sign up</Button>
             <Button variant="contained" type="submit">
               Submit
             </Button>
           </div>
         </form>
+        )}
       </Container>
       </ThemeProvider>
+
     </>
   )
 }

@@ -1,3 +1,15 @@
+/*
+Current Color Palette:
+#11221B - Main text bg
+#0c5449 - Text bg
+#19a993 - Accent
+#7cac6c - Button accent
+#e1c547 - Accent
+#da81b0 - Accent (alerts?)
+#f7fcd7 - Text accent
+#201b08 - Text bg
+*/
+
 html {
   position: relative;
   min-height: 100%;
