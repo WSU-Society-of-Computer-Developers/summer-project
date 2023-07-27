@@ -16,6 +16,7 @@ import { routes } from 'routes'
 import { usePocket } from 'contexts/PocketContext'
 import Spinner from './Spinner'
 import { getAvatarURL } from 'utils'
+import ProfilePic from './ProfilePic'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -145,11 +146,7 @@ function Nav() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={user.email}
-                    variant="square"
-                    src={getAvatarURL(user)}
-                  />
+                  <ProfilePic user={user} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -186,8 +183,6 @@ function Nav() {
                 </MenuItem>
               </Menu>
             </Box>
-          ) : loading ? (
-            <Spinner />
           ) : (
             <Button
               onClick={async () => {

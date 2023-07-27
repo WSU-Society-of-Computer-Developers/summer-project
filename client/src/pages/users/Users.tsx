@@ -13,6 +13,7 @@ import Spinner from 'components/Spinner'
 import { UserType } from 'types/User'
 import { getAvatarURL, getFileURL } from 'utils'
 import { Link } from 'react-router-dom'
+import ProfilePic from 'components/ProfilePic'
 
 function Users() {
   // get list of users from our api using swr and fetcher
@@ -28,11 +29,7 @@ function Users() {
             <Link to={`/users/${user.id}`} key={user.id}>
               <ListItem className="cursor-pointer hover:bg-slate-100">
                 <ListItemAvatar>
-                  <Avatar
-                    alt={user.email}
-                    variant="square"
-                    src={getAvatarURL(user)}
-                  />
+                  <ProfilePic user={user} />
                 </ListItemAvatar>
                 <ListItemText
                   sx={{ color: 'black' }}

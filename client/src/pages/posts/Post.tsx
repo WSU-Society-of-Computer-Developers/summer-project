@@ -15,6 +15,7 @@ import { usePocket } from 'contexts/PocketContext'
 import { CommentType } from 'types/Comment'
 import { PostType } from 'types/Post'
 import { getAvatarURL } from 'utils'
+import ProfilePic from 'components/ProfilePic'
 
 function Post() {
   const { postid } = useParams()
@@ -55,11 +56,7 @@ function Post() {
               className="cursor-pointer hover:bg-gray-800"
             >
               <ListItemAvatar>
-                <Avatar
-                  alt={comment.expand.author.email}
-                  variant="rounded"
-                  src={getAvatarURL(comment.expand.author)}
-                />
+                <ProfilePic user={comment.expand.author} />
               </ListItemAvatar>
               <ListItemText>
                 <strong>{comment.expand.author.email}</strong>
