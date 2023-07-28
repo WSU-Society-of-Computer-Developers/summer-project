@@ -13,7 +13,12 @@ import jwtDecode from 'jwt-decode'
 import ms from 'ms'
 import Spinner from 'components/Spinner'
 import { Route, Routes } from 'react-router-dom'
-import { pbURL, vagueFetcher, posts as PostActions } from 'utils/api'
+import {
+  pbURL,
+  vagueFetcher,
+  posts as PostActions,
+  users as UserActions
+} from 'utils/api'
 import useSWR from 'swr'
 
 interface PocketContextType {
@@ -26,6 +31,7 @@ interface PocketContextType {
   logout: () => void
   api: {
     posts: PostActions
+    users: UserActions
   }
   user: BaseAuthStore['model'] | null
   token: string | null
@@ -49,7 +55,8 @@ const PocketContext = createContext<PocketContextType>({
     throw new Error('Function not implemented.')
   },
   api: {
-    posts: new PostActions(new PocketBase())
+    posts: new PostActions(new PocketBase()),
+    users: new UserActions(new PocketBase())
   },
   user: null,
   token: null,
@@ -110,7 +117,7 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
   }, [])
 
   const api = useMemo(() => {
-    return { posts: new PostActions(pb) }
+    return { posts: new PostActions(pb), users: new UserActions(pb) }
   }, [pb])
 
   // proactively refresh token

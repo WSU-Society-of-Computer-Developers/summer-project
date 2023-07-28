@@ -3,6 +3,7 @@
 import axios from 'axios'
 import PocketBase, { BaseQueryParams } from 'pocketbase'
 import { PostType } from 'types/Post'
+import { UserType } from 'types/User'
 
 export const baseURL =
   (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api'
@@ -23,6 +24,26 @@ class pbAPI {
   }
   // TODO: ove user auth actions here in base class
 }
+
+export class users extends pbAPI {
+  constructor(pb: PocketBase) {
+    super(pb)
+  }
+  /**
+   *
+   * @param id user id
+   * @param query sort, filter, and expansion options
+   * @returns Promise<UserType>
+   * @example
+   * ```ts
+   * const user = await api.users.get('user_id')
+   * ```
+   */
+  get(id: UserType['id'], query?: BaseQueryParams) {
+    return this.pb.collection('users').getOne<UserType>(id, query)
+  }
+}
+
 export class posts extends pbAPI {
   constructor(pb: PocketBase) {
     super(pb)
@@ -32,6 +53,9 @@ export class posts extends pbAPI {
    * @param id Post record id
    * @param query sort, filter, and expansion options
    * @returns Promise<PostType>
+   * @example ```ts
+   * const post = await api.posts.get('123')
+   * ```
    */
   get(id: PostType['id'], query?: BaseQueryParams) {
     return this.pb.collection('posts').getOne<PostType>(id, query)
@@ -41,6 +65,10 @@ export class posts extends pbAPI {
    * @param title Post title
    * @param content Post content (rich content supported)
    * @returns Promise<PostType>
+   * @example
+   * ```ts
+   * const post = await api.posts.create('Hello World', 'This is my first post!')
+   * ```
    */
   create(title: PostType['title'], content: PostType['content']) {
     const data = {
