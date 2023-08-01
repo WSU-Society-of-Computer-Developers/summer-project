@@ -2,12 +2,15 @@ import { createRoot } from 'react-dom/client'
 import 'tailwindcss/tailwind.css'
 import App from 'App'
 import { BrowserRouter } from 'react-router-dom'
+import { PocketProvider } from 'contexts/PocketContext'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
 
 root.render(
   <BrowserRouter>
-    <App />
+    <PocketProvider>
+      <App />
+    </PocketProvider>
   </BrowserRouter>
 )
