@@ -78,6 +78,7 @@ function SignUp() {
 
     try {
       await login(email, password); // Attempt a login
+      alert("You're logged in!")
     } catch (error: any) {
       if (error.data instanceof Object) {
         // checks if its a pocketbase error
