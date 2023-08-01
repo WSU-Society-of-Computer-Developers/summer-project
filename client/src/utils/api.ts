@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import PocketBase, { BaseQueryParams } from 'pocketbase'
+import { LikeType } from 'types/Like'
 import { PostType } from 'types/Post'
 import { UserType } from 'types/User'
 
@@ -19,7 +20,8 @@ export const fetcher = (url: string) =>
   axios.get(baseURL + url).then((res) => res.data)
 
 class pbAPI {
-  constructor(protected pb: PocketBase) {
+  protected pb: PocketBase
+  constructor(pb: PocketBase) {
     this.pb = pb
   }
   // TODO: ove user auth actions here in base class
@@ -78,28 +80,23 @@ export class posts extends pbAPI {
     }
     return this.pb.collection('posts').create<PostType>(data)
   }
-}
-export const pbAPI_old = {
-  /** @example
-  {
-      pb,
-      collection: 'posts',
-      id: postid,
-      query: { expand: 'author,comments.author,likes' }
-    },
-    pbAPI.getOne
-  */
-  getOne: ({
-    pb,
-    collection,
-    id,
-    query
-  }: {
-    pb: PocketBase
-    collection: string
-    id: string
-    query?: BaseQueryParams
-  }) => pb.collection(collection).getOne(id, query)
-  // create: ({
-  //   pb,
+  /**
+   * likes a specific post
+   * @param postId Post record id
+   * @returns Promise<LikeType>
+   */
+  like(postId: PostType['id']) {
+    return this.pb.collection('likes').create<LikeType>({
+      author: this.pb?.authStore?.model?.id,
+      post: postId
+    })
+  }
+  /**
+   * unlikes a specific post
+   * @param postId Post record id
+   * @returns Promise<boolean>
+   */
+  unlike(postId: PostType['id']) {
+    return this.pb.collection('likes').delete(postId)
+  }
 }

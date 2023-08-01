@@ -1,4 +1,5 @@
 import { CommentType } from './Comment'
+import { LikeType } from './Like'
 import { UserType } from './User'
 
 export interface PostType {
@@ -10,6 +11,7 @@ export interface PostType {
   updated: string | Date
   expand: {
     ['comments(post)']?: CommentType[]
+    ['likes(post)']?: LikeType[]
     author?: UserType
   }
 }

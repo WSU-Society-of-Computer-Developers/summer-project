@@ -38,30 +38,7 @@ export default function BasicCard({
           <div dangerouslySetInnerHTML={{ __html: body }} />
         </Typography>
       </CardContent>
-      <CardActions>
-        {children}
-        {user && (
-          <Button size="small">
-            <ThumbUpSharp />
-            &nbsp;Like
-          </Button>
-        )}
-        {user?.id == author.id && (
-          <Button size="small">
-            <Edit />
-            &nbsp;Edit
-          </Button>
-        )}
-        <Button
-          onClick={() => {
-            navigator.share({ url: window.location.href }) // THIS WILL ONLY WORK ON HTTPS
-          }}
-          size="small"
-        >
-          <Share />
-          &nbsp;Share
-        </Button>
-      </CardActions>
+      <CardActions>{children}</CardActions>
     </Card>
   )
 }

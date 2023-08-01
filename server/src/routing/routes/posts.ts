@@ -35,11 +35,9 @@ router.get(
     const postid = req.params.id;
     const postTTL = 60;
     try {
-      const data = await pb
-        .collection("posts")
-        .getOne(postid, {
-          expand: "author,likes(post),author,comments(post).author",
-        });
+      const data = await pb.collection("posts").getOne(postid, {
+        expand: "author,likes(post),comments(post).author",
+      });
       // TODO: its not finding it
       res.status(200).json({ body: data });
       await client.set(req.params.cacheKey, JSON.stringify(data));

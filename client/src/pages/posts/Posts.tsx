@@ -27,7 +27,7 @@ function Posts() {
       }
       try {
         const post = await api.posts.create(title, body)
-        navigate('/posts/' + post.id)
+        navigate('/posts/' + post!.id)
       } catch (error: any | ClientResponseError) {
         const { issues, message } = parseError(error)
         if (issues.length > 0) {
