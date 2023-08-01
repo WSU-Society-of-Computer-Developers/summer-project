@@ -16,9 +16,9 @@ const theme = createTheme ({
   },
 });
 
-interface SignUpData {
+interface FormData {
   email: string
-  confirmEmail: string
+  confirmEmail?: string
   password: string
 }
 
@@ -27,17 +27,17 @@ function SignUp() {
   const [isSigningUp, setContentVisible] = useState(true);
   const handleToggleForm = () => {
     setContentVisible((prevVisible) => !prevVisible);
-  };
+  }
 
   const { register } = usePocket()
-  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSignup = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault() // prevents the page from refreshing after submit
     // Get the form values using FormData
     const formData = new FormData(event?.target)
 
     const { email, password, confirmEmail } = Object.fromEntries(
       formData.entries()
-    ) as unknown as SignUpData
+    ) as unknown as FormData
     // validation logic:
     // TODO: move all this logic to a separate file (utils?)
     try {
@@ -65,6 +65,32 @@ function SignUp() {
       alert(error.message)
     }
   }
+
+  const { login } = usePocket();
+  const handleLogin = async (event: React.ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Get the form values using FormData
+    const formData = new FormData(event?.target)
+
+    const { email, password } = Object.fromEntries(
+      formData.entries()
+    ) as unknown as FormData
+
+    try {
+      await login(email, password); // Attempt a login
+    } catch (error: any) {
+      if (error.data instanceof Object) {
+        // checks if its a pocketbase error
+        const errors = Object.values(error.data.data) as unknown as Array<{
+          code: string
+          message: string
+        }>
+        alert(errors[0].message)
+        return
+      }
+      alert(error.message)
+    }
+  }
   return (
     <>
       <header>
@@ -74,7 +100,7 @@ function SignUp() {
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
       <ThemeProvider theme={theme}>
       <Container maxWidth="xs" className="info-container secondary p-2">
-        {isSigningUp ? (<form onSubmit={handleSubmit}> {/*Sign up content */}
+        {isSigningUp ? (<form onSubmit={handleSignup}> {/*Sign up content */}
           <TextField
             label="Email Address"
             name="email"
@@ -97,7 +123,7 @@ function SignUp() {
               Submit
             </Button>
           </div>
-        </form>) : ( <form onSubmit={handleSubmit}> {/*Log in content */}
+        </form>) : ( <form onSubmit={handleLogin}> {/*Log in content */}
           <TextField
             label="Email Address"
             name="email"
