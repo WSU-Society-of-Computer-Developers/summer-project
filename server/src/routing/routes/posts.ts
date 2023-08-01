@@ -13,7 +13,7 @@ router.get(
     try {
       const data = await pb.collection("posts").getFullList({
         sort: "-created",
-        expand: "likes,author",
+        expand: "likes(post),author,comments(post)",
       });
       res.status(200).json({ body: data });
       await client.set(req.params.cacheKey, JSON.stringify(data));
@@ -37,7 +37,9 @@ router.get(
     try {
       const data = await pb
         .collection("posts")
-        .getOne(postid, { expand: "author,comments.author,likes" });
+        .getOne(postid, {
+          expand: "author,likes(post),author,comments(post).author",
+        });
       // TODO: its not finding it
       res.status(200).json({ body: data });
       await client.set(req.params.cacheKey, JSON.stringify(data));

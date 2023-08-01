@@ -74,9 +74,7 @@ export class posts extends pbAPI {
     const data = {
       author: this.pb?.authStore?.model?.id,
       title,
-      content,
-      comments: [],
-      likes: []
+      content
     }
     return this.pb.collection('posts').create<PostType>(data)
   }

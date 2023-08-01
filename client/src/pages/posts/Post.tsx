@@ -32,7 +32,7 @@ function Post() {
       </Skeleton>
     )
   const postData = data.body as unknown as PostType
-  const comments = postData.expand?.comments
+  const comments = postData.expand?.['comments(post)']
   return (
     <>
       <BasicCard

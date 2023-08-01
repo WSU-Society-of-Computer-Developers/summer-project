@@ -9,7 +9,7 @@ export interface PostType {
   created: string | Date
   updated: string | Date
   expand: {
-    comments?: CommentType[]
+    ['comments(post)']?: CommentType[]
     author?: UserType
   }
 }
