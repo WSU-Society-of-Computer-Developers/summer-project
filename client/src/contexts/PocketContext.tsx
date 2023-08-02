@@ -97,9 +97,12 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
   // user actions
   const register = useCallback(
     async (email: LoginData.email, password: LoginData.password) => {
-      return await pb
-        .collection('users')
-        .create({ email, password, passwordConfirm: password })
+      return await pb.collection('users').create({
+        email,
+        password,
+        passwordConfirm: password,
+        emailVisibility: true
+      })
     },
     []
   )

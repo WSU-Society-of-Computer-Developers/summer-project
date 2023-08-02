@@ -5,6 +5,7 @@ export interface CommentType {
   id: string
   author: string
   content: string
+  post: string
   created: string | Date
   updated: string | Date
   expand:

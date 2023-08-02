@@ -27,12 +27,12 @@ function Users() {
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
           {data?.body.map((user: UserType) => (
             <Link to={`/users/${user.id}`} key={user.id}>
-              <ListItem className="cursor-pointer hover:bg-slate-100">
+              <ListItem className="cursor-pointer hover:bg-slate-700">
                 <ListItemAvatar>
                   <ProfilePic user={user} />
                 </ListItemAvatar>
                 <ListItemText
-                  sx={{ color: 'black' }}
+                  sx={{ color: 'white' }}
                   primary={user.name || user.email}
                   secondary={
                     'Created ' + new Date(user.created).toLocaleDateString()

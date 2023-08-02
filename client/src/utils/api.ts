@@ -86,6 +86,7 @@ export class posts extends pbAPI {
    * @returns Promise<LikeType>
    */
   like(postId: PostType['id']) {
+    // TODO: like post -> count all likes for given postid
     return this.pb.collection('likes').create<LikeType>({
       author: this.pb?.authStore?.model?.id,
       post: postId
@@ -93,10 +94,10 @@ export class posts extends pbAPI {
   }
   /**
    * unlikes a specific post
-   * @param postId Post record id
+   * @param likeId like record id
    * @returns Promise<boolean>
    */
-  unlike(postId: PostType['id']) {
-    return this.pb.collection('likes').delete(postId)
+  unlike(likeId: LikeType['id']) {
+    return this.pb.collection('likes').delete(likeId)
   }
 }
