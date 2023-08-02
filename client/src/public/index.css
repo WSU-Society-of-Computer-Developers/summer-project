@@ -10,16 +10,16 @@ Current Color Palette:
 #201b08 - Text bg
 */
 
+.main-container { height: 84.5vh; }
+
 html {
   position: relative;
-  min-height: 100%;
 }
 
 /* TODO: consider gradient for the background */
 body {
   background-color: #11221B;
   color: #F7FCD7;
-  margin: auto;
 }
 
 .info-container {
@@ -33,13 +33,23 @@ header {
 }
 
 footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  flex-shrink: 0;
 }
 
 .secondary {
   background-color: #0c5449;
+}
+
+.tertiary {
+  background-color: #201b08;
+}
+
+/* This fills in the space btw header and footer */
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container > div {
+  flex-grow: 1;
 }
