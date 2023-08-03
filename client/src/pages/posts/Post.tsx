@@ -31,7 +31,8 @@ function Post() {
   // this is how you would do it w/ strictly backend
   // NOTE: you would have to change data to data.body (bcz we're using the backend)
   // const { data, error } = useSWR('/posts/' + postid, fetcher)
-  const { data, error, mutate } = useSWR({}, () =>
+  const random = React.useRef(Date.now()) // used to force refresh the data (im starting to regret using swr)
+  const { data, error, mutate } = useSWR([random], () =>
     api.posts.get(postid, {
       expand: 'author,comments(post).author,likes(post)'
     })
