@@ -15,8 +15,8 @@ describe('<Nav />', () => {
     ).toBeInTheDocument()
 
     expect(
-      screen.getByRole('link', {
-        name: /LOGO/i
+      screen.getByRole('img', {
+        name: /ByteBound logo/i
       })
     ).toBeInTheDocument() // check if logo is rendered
 

@@ -60,7 +60,10 @@ function Nav() {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            <Avatar
+              alt="ByteBound logo"
+              src="https://flowbite.com/docs/images/logo.svg"
+            />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -119,7 +122,10 @@ function Nav() {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            <Avatar
+              alt="ByteBound logo"
+              src="https://flowbite.com/docs/images/logo.svg"
+            />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {routes

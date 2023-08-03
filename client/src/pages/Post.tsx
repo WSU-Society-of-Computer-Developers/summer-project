@@ -37,7 +37,7 @@ function Post() {
   if (postError || userError || commentsError)
     return <div>Failed to load post.</div>
   return (
-    <>
+    <div data-testid="Post">
       <BasicCard
         title={postData.title}
         caption={userData.name}
@@ -65,7 +65,7 @@ function Post() {
           </ListItem>
         ))}
       </List>
-    </>
+    </div>
   )
 }
 

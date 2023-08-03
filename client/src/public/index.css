@@ -10,7 +10,6 @@ Current Color Palette:
 #201b08 - Text bg
 */
 
-.main-container { height: 84.5vh; }
 
 html {
   position: relative;
@@ -32,10 +31,6 @@ header {
   text-align: center;
 }
 
-footer {
-  flex-shrink: 0;
-}
-
 .secondary {
   background-color: #0c5449;
 }
@@ -44,12 +39,3 @@ footer {
   background-color: #201b08;
 }
 
-/* This fills in the space btw header and footer */
-.main-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.main-container > div {
-  flex-grow: 1;
-}
