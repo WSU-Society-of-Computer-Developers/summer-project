@@ -17,7 +17,7 @@ function Footer() {
                 ByteBound
               </span>
             </a>
-            <ul className="mb-6 flex flex-wrap items-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:mb-0">
+            <ul className="mb-6 flex flex-wrap items-center text-sm font-medium text-gray-500 dark:text-gray-400 md:mb-0">
               <li>
                 <a href="#" className="mr-4 hover:underline md:mr-6 ">
                   About

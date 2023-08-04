@@ -11,6 +11,32 @@ import PocketBase, { BaseAuthStore } from 'pocketbase'
 import { useInterval } from 'usehooks-ts'
 import jwtDecode from 'jwt-decode'
 import ms from 'ms'
+import Spinner from 'components/Spinner'
+import { Route, Routes } from 'react-router-dom'
+import {
+  pbURL,
+  vagueFetcher,
+  posts as PostActions,
+  users as UserActions
+} from 'utils/api'
+import useSWR from 'swr'
+
+interface PocketContextType {
+  // write type def here for all the functions you want to expose
+  register: (
+    email: LoginData.email,
+    password: LoginData.password
+  ) => Promise<any>
+  login: (email: LoginData.email, password: LoginData.password) => Promise<any>
+  logout: () => void
+  api: {
+    posts: PostActions
+    users: UserActions
+  }
+  user: BaseAuthStore['model'] | null
+  token: string | null
+  pb: PocketBase
+}
 
 const PocketContext = createContext<PocketContextType>({
   register: function (
@@ -27,6 +53,10 @@ const PocketContext = createContext<PocketContextType>({
   },
   logout: function (): void {
     throw new Error('Function not implemented.')
+  },
+  api: {
+    posts: new PostActions(new PocketBase()),
+    users: new UserActions(new PocketBase())
   },
   user: null,
   token: null,
@@ -45,14 +75,16 @@ namespace LoginData {
 
 export const PocketProvider = ({ children }: PocketContextProps) => {
   // useMemo is used to caching the value of the pb instance itself
-  const pb = useMemo(
-    () =>
-      new PocketBase(import.meta.env.VITE_PB_URL || 'http://localhost:8090'),
-    []
-  )
+  const pb = useMemo(() => new PocketBase(pbURL), [])
 
+  const isDev = useMemo(() => import.meta.env.MODE === 'development', [])
   const [token, setToken] = useState(pb.authStore.token)
   const [user, setUser] = useState(pb.authStore.model)
+  const { data, error, isLoading } = useSWR(
+    (import.meta.env.VITE_PB_URL || 'http://localhost:8090') + '/api/health',
+    vagueFetcher
+  )
+  // TODO: do we want blocking behavior for waiting on the backend on initial load? (landing page like fb?)
 
   useEffect(() => {
     // pb.collection('users').authWithPassword('test@test.n', 'test123456')
@@ -62,11 +94,15 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     })
   }, [])
 
+  // user actions
   const register = useCallback(
     async (email: LoginData.email, password: LoginData.password) => {
-      return await pb
-        .collection('users')
-        .create({ email, password, passwordConfirm: password })
+      return await pb.collection('users').create({
+        email,
+        password,
+        passwordConfirm: password,
+        emailVisibility: true
+      })
     },
     []
   )
@@ -83,6 +119,10 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
     pb.authStore.clear()
   }, [])
 
+  const api = useMemo(() => {
+    return { posts: new PostActions(pb), users: new UserActions(pb) }
+  }, [pb])
+
   // proactively refresh token
   const refreshSession = useCallback(async () => {
     if (!pb.authStore.isValid) return
@@ -97,24 +137,32 @@ export const PocketProvider = ({ children }: PocketContextProps) => {
   useInterval(refreshSession, token ? ms('2 minutes') : null)
   return (
     <PocketContext.Provider
-      value={{ register, login, logout, user, token, pb }}
+      value={{ register, login, logout, api, user, token, pb }}
     >
-      {children}
+      {isLoading ? (
+        <Spinner />
+      ) : error ? (
+        <Routes>
+          <Route
+            path="*"
+            element={
+              <div className="m-5 text-center">
+                <h1 className="text-5xl ">Uh oh.</h1>
+                <br />
+                <p>
+                  {isDev
+                    ? 'Cannot connect to backend. Make sure you are running the pocketbase server with the correct VITE_PB_URL env variable set (check readme)'
+                    : 'Something went wrong :('}
+                </p>
+              </div>
+            }
+          />
+        </Routes>
+      ) : (
+        children
+      )}
     </PocketContext.Provider>
   )
-}
-
-interface PocketContextType {
-  // write type def here for all the functions you want to expose
-  register: (
-    email: LoginData.email,
-    password: LoginData.password
-  ) => Promise<any>
-  login: (email: LoginData.email, password: LoginData.password) => Promise<any>
-  logout: () => void
-  user: BaseAuthStore['model'] | null
-  token: string | null
-  pb: PocketBase
 }
 
 export const usePocket = () => useContext<PocketContextType>(PocketContext)

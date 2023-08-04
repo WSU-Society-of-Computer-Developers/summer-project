@@ -7,13 +7,14 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "dev": "concurrently \"npx tsc --watch --preserveWatchOutput\" \"nodemon -q dist/index.js\"",
     "build": "tsc",
     "start": "node ./dist/index.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.2",
@@ -26,6 +27,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "pocketbase": "^0.15.3",

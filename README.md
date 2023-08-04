@@ -82,7 +82,8 @@ cd client
 2. Create a `.env` file in `client/` folder with the following contents:
 
 ```bash
-VITE_PB_URL=http://localhost:8090
+VITE_PB_URL=https://pb-temp1.zavaar.net
+VITE_API_URL=https://dev-temp1.zavaar.net
 ```
 
 3. Install dependencies
@@ -143,6 +144,7 @@ NODE_ENV=development
 
 ```bash
 VITE_PB_URL=http://localhost:8090
+VITE_API_URL=http://localhost:5000
 ```
 
 3. Download the `pocketbase_data.zip` from Discord in the pinned message in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1130206254422294628) channel and extract it in the `summer-project/server` folder

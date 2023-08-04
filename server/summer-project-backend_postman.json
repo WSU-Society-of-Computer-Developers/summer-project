@@ -1,56 +1,51 @@
 {
-    "info": {
-        "_postman_id": "cb48134e-e34a-4bc2-a797-161348ecd2d8",
-        "name": "summer-project-backend",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-        "description": ""
-    },
-    "item": [
+    "client": "Thunder Client",
+    "collectionName": "summer-project-backend",
+    "dateExported": "2023-07-27T01:52:15.461Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
         {
+            "_id": "be055766-2d2a-4b85-85f3-22406ce57ee4",
+            "colId": "1a408bdf-1563-43da-aac7-2398c18ab9ca",
+            "containerId": "",
             "name": "GET all posts",
-            "request": {
-                "method": "GET",
-                "url": {
-                    "raw": "{{url}}/posts",
-                    "path": [
-                        "posts"
-                    ],
-                    "host": [
-                        "{{url}}"
-                    ]
-                }
-            }
+            "url": "{{url}}/posts",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-07-15T05:05:16.576Z",
+            "modified": "2023-07-15T05:05:16.576Z",
+            "headers": [],
+            "params": [],
+            "tests": []
         },
         {
+            "_id": "d31dd9b0-7f2b-442f-9e35-7f83e329ec5d",
+            "colId": "1a408bdf-1563-43da-aac7-2398c18ab9ca",
+            "containerId": "",
             "name": "GET specfic post",
-            "request": {
-                "method": "GET",
-                "url": {
-                    "raw": "{{url}}/posts/so122i0tbidp663",
-                    "path": [
-                        "posts",
-                        "so122i0tbidp663"
-                    ],
-                    "host": [
-                        "{{url}}"
-                    ]
-                }
-            }
+            "url": "{{url}}/posts/so122i0tbidp663",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-07-15T05:05:31.071Z",
+            "modified": "2023-07-27T01:46:13.749Z",
+            "headers": [],
+            "params": [],
+            "tests": []
         },
         {
+            "_id": "06d253cc-9a0f-4640-bd55-8cf8ef362795",
+            "colId": "1a408bdf-1563-43da-aac7-2398c18ab9ca",
+            "containerId": "",
             "name": "GET all users",
-            "request": {
-                "method": "GET",
-                "url": {
-                    "raw": "{{url}}/users",
-                    "path": [
-                        "users"
-                    ],
-                    "host": [
-                        "{{url}}"
-                    ]
-                }
-            }
+            "url": "{{url}}/users",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-07-15T06:16:06.301Z",
+            "modified": "2023-07-15T06:16:18.767Z",
+            "headers": [],
+            "params": [],
+            "tests": []
         }
     ]
 }

@@ -14,12 +14,17 @@ import MenuItem from '@mui/material/MenuItem'
 import { Link } from 'react-router-dom'
 import { routes } from 'routes'
 import { usePocket } from 'contexts/PocketContext'
+import Spinner from './Spinner'
+import { getAvatarURL } from 'utils'
+import ProfilePic from './ProfilePic'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 function Nav() {
-  const { user } = usePocket()
+  const { user, logout, login } = usePocket()
+
+  const [loading, setLoading] = React.useState(false)
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -143,11 +148,11 @@ function Nav() {
           </Box>
 
           {/* User Menu */}
-          {user && (
+          {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user.email} src={user.avatar} />
+                  <ProfilePic user={user} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -166,13 +171,46 @@ function Nav() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem
+                  onClick={() => {
+                    // TODO: Add profile page
+                    handleCloseUserMenu()
+                  }}
+                >
+                  <Typography textAlign="center">Profile</Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logout()
+                    handleCloseUserMenu()
+                  }}
+                >
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
+          ) : (
+            <Button
+              onClick={async () => {
+                try {
+                  const email = prompt('Please enter your email')
+                  const password = prompt('Please enter your password')
+                  if (!email || !password) {
+                    throw new Error('Please fill out all fields')
+                  }
+                  setLoading(true)
+                  await login(email, password)
+                  alert('Login successful') // TODO: change this to toast notif
+                } catch (error: any) {
+                  alert(error.message)
+                } finally {
+                  setLoading(false)
+                }
+              }}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Login
+            </Button>
           )}
         </Toolbar>
       </Container>

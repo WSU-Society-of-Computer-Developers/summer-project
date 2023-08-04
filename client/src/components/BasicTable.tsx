@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from '@mui/material/styles'
 
 interface TableProps {
   rows: any[]
@@ -15,6 +16,7 @@ interface TableProps {
 // TODO: make cells (keys) dynamic
 
 export default function BasicTable({ rows }: TableProps) {
+  const theme = useTheme()
   const navigate = useNavigate()
   return (
     <TableContainer component={Paper}>
@@ -33,13 +35,13 @@ export default function BasicTable({ rows }: TableProps) {
                 // go to specific post page
                 navigate(`/posts/${row.id}`)
               }}
-              className="cursor-pointer hover:bg-gray-100"
+              className="cursor-pointer hover:bg-slate-700"
               sx={{
                 '&:last-child td, &:last-child th': { border: 0 }
               }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.expand.author?.name || row.expand.author?.email || ''}
               </TableCell>
               <TableCell>{row.title}</TableCell>
             </TableRow>
