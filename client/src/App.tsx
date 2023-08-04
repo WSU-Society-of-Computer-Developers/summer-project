@@ -23,7 +23,7 @@ function App() {
             </Routes>
           </React.Suspense>
           {/* this if for footer to have space to fit in viewport */}
-          <div className="h-[150px]"></div>
+          <div className="mt-5 h-[150px]"></div>
         </div>
       </div>
       <Footer />
