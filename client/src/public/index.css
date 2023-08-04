@@ -10,16 +10,15 @@ Current Color Palette:
 #201b08 - Text bg
 */
 
+
 html {
   position: relative;
-  min-height: 100%;
 }
 
 /* TODO: consider gradient for the background */
 body {
   background-color: #11221B;
   color: #F7FCD7;
-  margin: auto;
 }
 
 .info-container {
@@ -32,14 +31,11 @@ header {
   text-align: center;
 }
 
-footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 98%;
+.secondary {
+  background-color: #0c5449;
 }
 
-.secondary {
-  background-color: #0C5449;
+.tertiary {
+  background-color: #201b08;
 }
+

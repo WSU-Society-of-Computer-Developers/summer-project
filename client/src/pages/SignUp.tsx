@@ -5,16 +5,16 @@ import { usePocket } from '../contexts/PocketContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 // TODO: Extract to a separate file when we settle on our color palette
-const theme = createTheme ({
+const theme = createTheme({
   palette: {
     primary: {
-      main: "#7cac6c",
+      main: '#7cac6c'
     },
     secondary: {
-      main: "#E1C547",
+      main: '#E1C547'
     }
-  },
-});
+  }
+})
 
 interface FormData {
   email: string
@@ -24,9 +24,9 @@ interface FormData {
 
 function SignUp() {
   // Method for rendering log in/sign up info
-  const [isSigningUp, setContentVisible] = useState(true);
+  const [isSigningUp, setContentVisible] = useState(true)
   const handleToggleForm = () => {
-    setContentVisible((prevVisible) => !prevVisible);
+    setContentVisible((prevVisible) => !prevVisible)
   }
 
   const { register } = usePocket()
@@ -66,9 +66,9 @@ function SignUp() {
     }
   }
 
-  const { login } = usePocket();
+  const { login } = usePocket()
   const handleLogin = async (event: React.ChangeEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
     // Get the form values using FormData
     const formData = new FormData(event?.target)
 
@@ -77,7 +77,7 @@ function SignUp() {
     ) as unknown as FormData
 
     try {
-      await login(email, password); // Attempt a login
+      await login(email, password) // Attempt a login
       alert("You're logged in!")
     } catch (error: any) {
       if (error.data instanceof Object) {
@@ -93,61 +93,76 @@ function SignUp() {
     }
   }
   return (
-    <>
+    <div data-testid="Sign Up">
       <header>
         <h1 className="mb-7 text-4xl font-bold">Sign Up to ByteBound WSU</h1>
         <h2>To register, please enter the following information</h2>
       </header>
       {/* TODO: refactor this to look more appealing https://mui.com/material-ui/react-text-field/ */}
       <ThemeProvider theme={theme}>
-      <Container maxWidth="xs" className="info-container secondary p-2">
-        {isSigningUp ? (<form onSubmit={handleSignup}> {/*Sign up content */}
-          <TextField
-            label="Email Address"
-            name="email"
-            variant="standard"
-          /><br />
-          <TextField
-            label="Confirm Email"
-            name="confirmEmail"
-            variant="standard"
-          /><br />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            variant="standard"
-          /><br />
-          <div className="text-right">
-            <Button onClick={handleToggleForm} variant="text">Log in</Button>
-            <Button variant="contained" type="submit">
-              Submit
-            </Button>
-          </div>
-        </form>) : ( <form onSubmit={handleLogin}> {/*Log in content */}
-          <TextField
-            label="Email Address"
-            name="email"
-            variant="standard"
-          /><br />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            variant="standard"
-          /><br />
-          <div className="text-right">
-            <Button onClick={handleToggleForm} variant="text">Sign up</Button>
-            <Button variant="contained" type="submit">
-              Submit
-            </Button>
-          </div>
-        </form>
-        )}
-      </Container>
+        <Container maxWidth="xs" className="info-container secondary p-2">
+          {isSigningUp ? (
+            <form onSubmit={handleSignup}>
+              {' '}
+              {/*Sign up content */}
+              <TextField
+                label="Email Address"
+                name="email"
+                variant="standard"
+              />
+              <br />
+              <TextField
+                label="Confirm Email"
+                name="confirmEmail"
+                variant="standard"
+              />
+              <br />
+              <TextField
+                label="Password"
+                name="password"
+                type="password"
+                variant="standard"
+              />
+              <br />
+              <div className="text-right">
+                <Button onClick={handleToggleForm} variant="text">
+                  Log in
+                </Button>
+                <Button variant="contained" type="submit">
+                  Submit
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleLogin}>
+              {' '}
+              {/*Log in content */}
+              <TextField
+                label="Email Address"
+                name="email"
+                variant="standard"
+              />
+              <br />
+              <TextField
+                label="Password"
+                name="password"
+                type="password"
+                variant="standard"
+              />
+              <br />
+              <div className="text-right">
+                <Button onClick={handleToggleForm} variant="text">
+                  Sign up
+                </Button>
+                <Button variant="contained" type="submit">
+                  Submit
+                </Button>
+              </div>
+            </form>
+          )}
+        </Container>
       </ThemeProvider>
-
-    </>
+    </div>
   )
 }
 

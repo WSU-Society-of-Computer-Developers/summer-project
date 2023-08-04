@@ -16,7 +16,7 @@ describe('<App />', () => {
     )
     // TODO: maybe find a better way to test if the home page renders fine
     await waitFor(() =>
-      expect(screen.getByText(/SCD Summer Project/i)).toBeInTheDocument()
+      expect(screen.getByText(/ByteBound/i)).toBeInTheDocument()
     )
   })
   it("should render <NotFound/> if the page doesn't exist", async () => {
@@ -60,9 +60,11 @@ describe('<App />', () => {
           name: route.name
         })
       )
-      expect(
-        container.querySelector(`div[data-testid=${route.name}]`)
-      ).toBeTruthy()
+      await waitFor(() =>
+        expect(
+          container.querySelector(`div[data-testid='${route.name}']`)
+        ).toBeTruthy()
+      )
     }
   })
 })
