@@ -8,7 +8,7 @@ function User() {
   // const navigate = useNavigate()
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error its technically impossible for userid to be undefined because of how our routing is setup
-  const { data, error, isLoading } = useSWR({}, () => api.users.get(userid))
+  const { data, error, isLoading } = useSWR(userid, () => api.users.get(userid))
   if (error) return <div>Failed to load user.</div>
   return (
     <>

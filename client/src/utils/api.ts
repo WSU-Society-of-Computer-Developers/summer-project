@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import PocketBase, { BaseQueryParams } from 'pocketbase'
+import { CommentType } from 'types/Comment'
 import { LikeType } from 'types/Like'
 import { PostType } from 'types/Post'
 import { UserType } from 'types/User'
@@ -79,6 +80,19 @@ export class posts extends pbAPI {
       content
     }
     return this.pb.collection('posts').create<PostType>(data)
+  }
+  /**
+   * Adds a comment to a specific post
+   * @param postId Post record id
+   * @param content Comment content (rich content supported)
+   * @returns Promise<CommentType>
+   */
+  comment(postId: PostType['id'], content: string) {
+    return this.pb.collection('comments').create<CommentType>({
+      author: this.pb?.authStore?.model?.id,
+      post: postId,
+      content
+    })
   }
   /**
    * likes a specific post
