@@ -9,34 +9,50 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Skeleton
+  Skeleton,
+  TextareaAutosize
 } from '@mui/material'
 import BasicCard from 'components/BasicCard'
 import { usePocket } from 'contexts/PocketContext'
 import { CommentType } from 'types/Comment'
 import { PostType } from 'types/Post'
-import { getAvatarURL } from 'utils'
+import useSWRMutation from 'swr/mutation'
 import ProfilePic from 'components/ProfilePic'
-import { Edit, Share, ThumbDownSharp, ThumbUpSharp } from '@mui/icons-material'
+import {
+  Edit,
+  SendSharp,
+  Share,
+  ThumbDownSharp,
+  ThumbUpSharp
+} from '@mui/icons-material'
 import { LikeType } from 'types/Like'
+import { useTheme } from '@mui/material'
 
 // TODO: do we want to use cache for specific pages here?
 
 function Post() {
   const { postid } = useParams() as { postid: string }
+  const theme = useTheme()
   const [likes, setLikes] = useState<LikeType[] | []>([])
   const { user, api } = usePocket()
+  const replyField = React.useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
 
   // this is how you would do it w/ strictly backend
   // NOTE: you would have to change data to data.body (bcz we're using the backend)
-  // const { data, error } = useSWR('/posts/' + postid, fetcher)
+  // const { data, error, mutate } = useSWR(
+  //   `/posts/${postid}?expand=author,comments(post).author,likes(post)`,
+  //   fetcher
+  // )
+
   //const random = React.useRef(Date.now()) // used to force refresh the data (im starting to regret using swr)
   const { data, error, mutate } = useSWR(postid, () =>
     api.posts.get(postid, {
       expand: 'author,comments(post).author,likes(post)'
     })
   )
+  // const { trigger } = useSWRMutation()
+  // https://dev.to/franciscomendes10866/how-to-use-pocketbase-database-with-react-2gg9
   useEffect(() => {
     if (data) {
       setLikes(
@@ -78,11 +94,30 @@ function Post() {
                   <Button
                     size="small"
                     onClick={async () => {
-                      await api.posts.unlike(
-                        likes.find((like) => like.author === user.id)!.id // find our like record id
-                      )
-                      mutate() // triggers a reload of new data
-                      // TODO: find a better way to show updated like data
+                      try {
+                        await api.posts.unlike(
+                          likes.find((like) => like.author === user.id)!.id // find our like record id
+                        )
+                        await mutate() // triggers a reload of new data
+                        // TODO: find a better way to show updated like data
+                        // await mutate(
+                        //   () => ({
+                        //     ...{
+                        //       expand: {
+                        //         'likes(post)': postData.expand['likes(post)']
+                        //       }
+                        //     },
+                        //     ...postData
+                        //   }), // this doesnt do anything?
+                        //   {
+                        //     revalidate: true,
+                        //     populateCache: true,
+                        //     rollbackOnError: true
+                        //   }
+                        // )
+                      } catch (err: any) {
+                        console.error(err)
+                      }
                     }}
                     startIcon={
                       <Badge badgeContent={likes.length} color="secondary">
@@ -97,7 +132,7 @@ function Post() {
                     size="small"
                     onClick={async () => {
                       await api.posts.like(postid) // TODO: add error handling
-                      mutate() // triggers a reload of new data
+                      await mutate() // triggers a reload of new data
                     }}
                     startIcon={
                       <Badge
@@ -159,6 +194,35 @@ function Post() {
           ))
         ) : (
           <div>No comments yet!</div>
+        )}
+        {user && (
+          <>
+            <textarea
+              id="message"
+              ref={replyField}
+              rows={4}
+              style={{ backgroundColor: theme.palette.background.paper }}
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder="Write your thoughts here..."
+            ></textarea>
+            <Button
+              startIcon={<SendSharp />}
+              onClick={async () => {
+                try {
+                  await api.posts.comment(
+                    postid,
+                    replyField.current?.value || ''
+                  )
+                  await mutate()
+                } catch (err: any) {
+                  console.error(err)
+                  // TODO: handle errors (w toast)
+                }
+              }}
+            >
+              Reply
+            </Button>
+          </>
         )}
       </List>
     </>
