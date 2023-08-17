@@ -10,6 +10,9 @@ import useSWR from 'swr'
 import { fetcher } from 'utils/api'
 import { ClientResponseError } from 'pocketbase'
 import { parseError } from 'utils'
+import "tailwindcss/components.css";
+import "tailwindcss/utilities.css"
+
 
 function Posts() {
   const navigate = useNavigate()
@@ -20,8 +23,8 @@ function Posts() {
     e.preventDefault()
     // const formData = new FormData(e.target)
     ;(async () => {
-      const title = prompt("Enter your post's title")
-      const body = prompt("Enter your post's content")
+      const title: string = document.getElementById("post-title").value;
+      const body: string = document.getElementById("post-body").value;
       if (!title || !body) {
         return alert("You can't leave the title or body empty")
       }
@@ -67,22 +70,22 @@ function Posts() {
                           Create Post
                         </h1>
                         <form onSubmit={handleCreatePostSubmit}>
-                          <div className="mb-5">
-                            {/* <TextField
-                          required
-                          style={{ color: 'white' }}
-                          id="outlined-required"
-                          InputProps={{
-                            sx: { color: 'white', borderColor: 'white' }
-                          }}
-                          InputLabelProps={{
-                            sx: { color: 'white' }
-                          }}
-                          label="Title"
-                        /> */}
-                            {/* ADD TEXT FIELDS HERE */}
-                            <button type="submit">go</button>
-                          </div>
+                          <TextField
+                            required
+                            fullWidth
+                            className='mb-5'
+                            id="post-title"
+                            label="Title"
+                          />
+                          <TextField 
+                            required
+                            fullWidth
+                            multiline
+                            id="post-body"
+                            label="Body"
+                          />
+                          <Button className='mr-3 mt-2' variant='contained' type="submit">Submit</Button>
+                          <Button className='mt-2' variant='outlined'>Clear</Button>
                         </form>
                       </div>
                     </>

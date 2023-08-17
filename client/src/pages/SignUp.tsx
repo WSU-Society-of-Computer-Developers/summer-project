@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Button, Container, TextField } from '@mui/material'
 import { usePocket } from '../contexts/PocketContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { useNavigate } from 'react-router-dom'
 
 // TODO: Extract to a separate file when we settle on our color palette
 const theme = createTheme({
@@ -23,6 +24,8 @@ interface FormData {
 }
 
 function SignUp() {
+  const navigate = useNavigate();
+
   // Method for rendering log in/sign up info
   const [isSigningUp, setContentVisible] = useState(true)
   const handleToggleForm = () => {
@@ -51,6 +54,7 @@ function SignUp() {
         throw new Error('Password must be at least 8 characters')
       }
       await register(email, password)
+      navigate("/posts");
       alert("You're signed up!") // TODO: toast notifications (react-toastify)
     } catch (error: any) {
       if (error.data instanceof Object) {
@@ -78,6 +82,7 @@ function SignUp() {
 
     try {
       await login(email, password) // Attempt a login
+      navigate("/posts");
       alert("You're logged in!")
     } catch (error: any) {
       if (error.data instanceof Object) {
