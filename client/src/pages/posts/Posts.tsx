@@ -10,6 +10,9 @@ import useSWR from 'swr'
 import { fetcher } from 'utils/api'
 import { ClientResponseError } from 'pocketbase'
 import { parseError } from 'utils'
+import "tailwindcss/components.css";
+import "tailwindcss/utilities.css"
+
 
 function Posts() {
   const navigate = useNavigate()
@@ -67,24 +70,22 @@ function Posts() {
                           Create Post
                         </h1>
                         <form onSubmit={handleCreatePostSubmit}>
-                          <div className="mb-5">
-                            <TextField
-                              required
-                              fullWidth
-                              className='mb-5'
-                              id="post-title"
-                              label="Title"
-                            />
-                            <TextField 
-                              required
-                              fullWidth
-                              multiline
-                              id="post-body"
-                              label="Body"
-                            />
-                            <Button type="submit">Submit</Button>
-                            <Button>Clear</Button>
-                          </div>
+                          <TextField
+                            required
+                            fullWidth
+                            className='mb-5'
+                            id="post-title"
+                            label="Title"
+                          />
+                          <TextField 
+                            required
+                            fullWidth
+                            multiline
+                            id="post-body"
+                            label="Body"
+                          />
+                          <Button className='mr-3 mt-2' variant='contained' type="submit">Submit</Button>
+                          <Button className='mt-2' variant='outlined'>Clear</Button>
                         </form>
                       </div>
                     </>
