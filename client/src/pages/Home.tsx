@@ -1,6 +1,9 @@
 import React from 'react'
+import { Button } from '@mui/material'
+import { usePocket } from '../contexts/PocketContext'
 
 function Home() {
+  const { api } = usePocket()
   return (
     <div
       data-testid="Home"
@@ -16,6 +19,19 @@ function Home() {
       >
         Get Started
       </a>
+      <Button onClick={async () => {
+        try {
+          const postID: string = prompt('Enter the ID of the post you wish to delete.')
+
+          await api.posts.delete(postID)
+          
+        } catch(error: any) {
+          alert(error.message); {/* TODO: toastify */}
+        }
+      }}
+      >
+        TEST: Delete a post
+      </Button>
     </div>
   )
 }
