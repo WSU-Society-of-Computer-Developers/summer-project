@@ -81,7 +81,14 @@ export class posts extends pbAPI {
     }
     return this.pb.collection('posts').create<PostType>(data)
   }
-
+  /**
+   * @param id Post id (should be taken from the backend)
+   * @returns Promise<boolean>
+   * @example
+   * ```ts
+   * await api.posts.delete('1dew3532ed')
+   * ```
+   */
   delete(id: PostType['id']) {
     return this.pb.collection('posts').delete(id)
   }
