@@ -24,7 +24,7 @@ function Home() {
           const postID: string = prompt('Enter the ID of the post you wish to delete.')
 
           await api.posts.delete(postID)
-          
+          alert('The post with ID ' + postID + ' was successfully deleted')
         } catch(error: any) {
           alert(error.message); {/* TODO: toastify */}
         }
