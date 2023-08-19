@@ -92,6 +92,13 @@ export class posts extends pbAPI {
   delete(id: PostType['id']) {
     return this.pb.collection('posts').delete(id)
   }
+  /**
+   * 
+   * @param id Post id (should be taken from the backend)
+   * @param title Title of the post matching the id
+   * @param content Content of the post matching the id
+   * @returns Promist<Record>
+   */
   edit(id: PostType['id'], title: PostType['title'], content: PostType['content']) {
     const data = {
       title,
