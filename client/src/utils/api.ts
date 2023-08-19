@@ -92,6 +92,13 @@ export class posts extends pbAPI {
   delete(id: PostType['id']) {
     return this.pb.collection('posts').delete(id)
   }
+  edit(id: PostType['id'], title: PostType['title'], content: PostType['content']) {
+    const data = {
+      title,
+      content
+    }
+    return this.pb.collection('posts').update(id, data)
+  }
   /**
    * Adds a comment to a specific post
    * @param postId Post record id
