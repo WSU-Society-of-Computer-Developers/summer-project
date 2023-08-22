@@ -93,13 +93,17 @@ export class posts extends pbAPI {
     return this.pb.collection('posts').delete(id)
   }
   /**
-   * 
+   *
    * @param id Post id (should be taken from the backend)
    * @param title Title of the post matching the id
    * @param content Content of the post matching the id
-   * @returns Promist<Record>
+   * @returns Promise<Record>
    */
-  edit(id: PostType['id'], title: PostType['title'], content: PostType['content']) {
+  edit(
+    id: PostType['id'],
+    title: PostType['title'],
+    content: PostType['content']
+  ) {
     const data = {
       title,
       content
@@ -112,12 +116,28 @@ export class posts extends pbAPI {
    * @param content Comment content (rich content supported)
    * @returns Promise<CommentType>
    */
-  comment(postId: PostType['id'], content: string) {
+  addComment(postId: PostType['id'], content: string) {
     return this.pb.collection('comments').create<CommentType>({
       author: this.pb?.authStore?.model?.id,
       post: postId,
       content
     })
+  }
+  /**
+   * Deletes a comment
+   * @param commentId comment record id
+   */
+  deleteComment(commentId: CommentType['id']) {
+    return this.pb.collection('comments').delete(commentId)
+  }
+  /**
+   * Edits a comment
+   * @param commentId comment record id
+   * @param content Comment content (rich content is supported)
+   * @returns Promise<CommentType>
+   */
+  editComment(commentId: CommentType['id'], content: CommentType['content']) {
+    return this.pb.collection('comments').update(commentId, { content })
   }
   /**
    * likes a specific post
