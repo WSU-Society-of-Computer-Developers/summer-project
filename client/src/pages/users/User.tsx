@@ -3,7 +3,7 @@ import PocketBase from 'pocketbase'
 import { usePocket } from 'contexts/PocketContext'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { Card, Typography } from '@mui/material'
+import { Card, Typography, Button } from '@mui/material'
 
 function User() {
   // PocketBase functionality
@@ -32,6 +32,9 @@ function User() {
                 {/* TODO: add bio?
                 <Typography><strong>Bio:</strong></Typography>*/}
                 {/* TODO: add edit functionality */}
+                {(user?.id == data?.id) ? (
+                  <Button>Edit Info</Button>
+                ) : (<p></p>)}
               </Card>
 
               <h2 className='mt-4 mb-2 text-2xl font-bold text-white'>Posts</h2>
