@@ -2,6 +2,7 @@ import React from 'react'
 import { usePocket } from 'contexts/PocketContext'
 import { useParams, useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
+
 function User() {
   const { user, api } = usePocket()
   const { userid } = useParams()
