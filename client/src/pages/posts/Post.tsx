@@ -12,13 +12,14 @@ import {
   Skeleton,
   TextareaAutosize
 } from '@mui/material'
-import BasicCard from 'components/BasicCard'
+import BasicCard from 'components/PostContent'
 import { usePocket } from 'contexts/PocketContext'
 import { CommentType } from 'types/Comment'
 import { PostType } from 'types/Post'
 import useSWRMutation from 'swr/mutation'
 import ProfilePic from 'components/ProfilePic'
 import {
+  DeleteForeverOutlined,
   Edit,
   SendSharp,
   Share,
@@ -176,18 +177,36 @@ function Post() {
         {comments ? (
           comments.map((comment: CommentType) => (
             <ListItem
-              onClick={() => {
-                navigate(`/users/${comment.author}`)
-                // Not implemented yet (will have to do this on our end later)
-              }}
               key={comment.id}
-              className="cursor-pointer hover:bg-slate-700"
+              // className="cursor-pointer hover:bg-slate-700"
             >
-              <ListItemAvatar>
+              <ListItemAvatar
+                onClick={() => {
+                  navigate(`/users/${comment.author}`)
+                }}
+              >
                 <ProfilePic user={comment.expand.author} />
               </ListItemAvatar>
               <ListItemText>
-                <strong>{comment.expand.author.email}</strong>
+                <strong>
+                  <span
+                    onClick={() => {
+                      navigate(`/users/${comment.author}`)
+                    }}
+                    className="cursor-pointer hover:underline"
+                  >
+                    {comment.expand.author.email}{' '}
+                  </span>
+                  {user && comment.expand.author.id == user!.id && (
+                    <DeleteForeverOutlined
+                      color="secondary"
+                      className="cursor-pointer hover:text-red-400"
+                      onClick={() => {
+                        // DELETE COMMENT api
+                      }}
+                    />
+                  )}
+                </strong>
                 <div dangerouslySetInnerHTML={{ __html: comment.content }} />
               </ListItemText>
             </ListItem>
@@ -209,6 +228,7 @@ function Post() {
               startIcon={<SendSharp />}
               onClick={async () => {
                 try {
+                  // add form validation logic here
                   await api.posts.comment(
                     postid,
                     replyField.current?.value || ''
