@@ -1,5 +1,5 @@
 import { DataArrayRounded } from '@mui/icons-material'
-import { Button, TextField, TextareaAutosize } from '@mui/material'
+import { Button, Grid, TextField, TextareaAutosize } from '@mui/material'
 import BasicTable from 'components/BasicTable'
 import Modal from 'components/Modal'
 import Spinner from 'components/Spinner'
@@ -48,6 +48,7 @@ function Posts() {
       // TODO: handle responses from pb functions
     })()
   }
+  // old posts view: { xs: 12, md: 6, sm: 4 }
   if (error) return <div>Failed to load posts.</div>
   return (
     <>
@@ -57,9 +58,11 @@ function Posts() {
           {isLoading ? (
             <Spinner />
           ) : (
-            <>
+            <Grid container spacing={1}>
               {data?.body.map((post: PostType) => (
-                <PostList key={post.id} post={post} />
+                <Grid xs={12} sm="auto" key={post.id} item>
+                  <PostList post={post} />{' '}
+                </Grid>
               ))}
 
               {user && (
@@ -70,7 +73,7 @@ function Posts() {
                     onClick={() => setModal(true)}
                     sx={{ width: '100%' }}
                   >
-                    Create
+                    Start a conversation
                   </Button>
                   <Modal open={modal} onClose={() => setModal(false)}>
                     <>
@@ -107,7 +110,7 @@ function Posts() {
                   </Modal>
                 </>
               )}
-            </>
+            </Grid>
           )}
         </div>
       </div>

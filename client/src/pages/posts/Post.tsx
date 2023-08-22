@@ -197,7 +197,7 @@ function Post() {
                   >
                     {comment.expand.author.email}{' '}
                   </span>
-                  {comment.expand.author.id == user!.id && (
+                  {user && comment.expand.author.id == user!.id && (
                     <DeleteForeverOutlined
                       color="secondary"
                       className="cursor-pointer hover:text-red-400"
@@ -228,6 +228,7 @@ function Post() {
               startIcon={<SendSharp />}
               onClick={async () => {
                 try {
+                  // add form validation logic here
                   await api.posts.comment(
                     postid,
                     replyField.current?.value || ''

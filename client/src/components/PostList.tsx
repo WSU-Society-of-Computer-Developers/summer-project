@@ -69,7 +69,7 @@ function PostList({
           }
         />
       </ListItem>
-      <Divider variant="inset" component="li" />
+      {/* <Divider variant="inset" component="li" /> */}
     </List>
   )
 }
