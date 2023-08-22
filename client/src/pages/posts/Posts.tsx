@@ -10,21 +10,19 @@ import useSWR from 'swr'
 import { fetcher } from 'utils/api'
 import { ClientResponseError } from 'pocketbase'
 import { parseError } from 'utils'
-import "tailwindcss/components.css";
-import "tailwindcss/utilities.css"
-
 
 function Posts() {
   const navigate = useNavigate()
+  const titleRef = React.useRef<HTMLInputElement>()
+  const bodyRef = React.useRef<HTMLInputElement>()
   const { data, error, isLoading } = useSWR('/posts', fetcher)
   const { user, api } = usePocket()
   const [modal, setModal] = React.useState<boolean>(false)
-  const handleCreatePostSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleCreatePostSubmit = (e: React.MouseEvent<HTMLElement>) => {
     // const formData = new FormData(e.target)
     ;(async () => {
-      const title: string = document.getElementById("post-title").value;
-      const body: string = document.getElementById("post-body").value;
+      const title = titleRef?.current?.value
+      const body = bodyRef?.current?.value
       if (!title || !body) {
         return alert("You can't leave the title or body empty")
       }
@@ -32,11 +30,16 @@ function Posts() {
         const post = await api.posts.create(title, body)
         navigate('/posts/' + post!.id)
       } catch (error: any | ClientResponseError) {
-        const { issues, message } = parseError(error)
-        if (issues.length > 0) {
-          alert(issues.join('\n'))
+        console.error(error)
+        if (error instanceof ClientResponseError) {
+          const { issues, message } = parseError(error)
+          if (issues.length > 0) {
+            alert(issues.join('\n'))
+          } else {
+            alert(message)
+          }
         } else {
-          alert(message)
+          alert('An unknown error occurred.')
         }
       }
       // TODO: handle responses from pb functions
@@ -69,24 +72,30 @@ function Posts() {
                         <h1 className="mb-5 text-2xl font-bold text-white">
                           Create Post
                         </h1>
-                        <form onSubmit={handleCreatePostSubmit}>
-                          <TextField
-                            required
-                            fullWidth
-                            className='mb-5'
-                            id="post-title"
-                            label="Title"
-                          />
-                          <TextField 
-                            required
-                            fullWidth
-                            multiline
-                            id="post-body"
-                            label="Body"
-                          />
-                          <Button className='mr-3 mt-2' variant='contained' type="submit">Submit</Button>
-                          <Button className='mt-2' variant='outlined'>Clear</Button>
-                        </form>
+                        <TextField
+                          required
+                          fullWidth
+                          className="mb-5"
+                          inputRef={titleRef}
+                          label="Title"
+                        />
+                        <TextField
+                          required
+                          fullWidth
+                          multiline
+                          inputRef={bodyRef}
+                          label="Body"
+                        />
+                        <Button
+                          className="mr-3 mt-2"
+                          variant="contained"
+                          onClick={handleCreatePostSubmit}
+                        >
+                          Submit
+                        </Button>
+                        <Button className="mt-2" variant="outlined">
+                          Clear
+                        </Button>
                       </div>
                     </>
                   </Modal>

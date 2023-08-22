@@ -193,13 +193,14 @@ function Post() {
                     onClick={() => {
                       navigate(`/users/${comment.author}`)
                     }}
-                    className="hover:underline cursor-pointer"
+                    className="cursor-pointer hover:underline"
                   >
                     {comment.expand.author.email}{' '}
                   </span>
                   {comment.expand.author.id == user!.id && (
                     <DeleteForeverOutlined
                       color="secondary"
+                      className="cursor-pointer hover:text-red-400"
                       onClick={() => {
                         // DELETE COMMENT api
                       }}
