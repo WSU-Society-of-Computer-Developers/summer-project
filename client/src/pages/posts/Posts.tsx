@@ -10,6 +10,8 @@ import useSWR from 'swr'
 import { fetcher } from 'utils/api'
 import { ClientResponseError } from 'pocketbase'
 import { parseError } from 'utils'
+import PostList from 'components/PostList'
+import { PostType } from 'types/Post'
 
 function Posts() {
   const navigate = useNavigate()
@@ -19,6 +21,7 @@ function Posts() {
   const { user, api } = usePocket()
   const [modal, setModal] = React.useState<boolean>(false)
   const handleCreatePostSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault()
     // const formData = new FormData(e.target)
     ;(async () => {
       const title = titleRef?.current?.value
@@ -55,7 +58,10 @@ function Posts() {
             <Spinner />
           ) : (
             <>
-              <BasicTable rows={data?.body} />
+              {data?.body.map((post: PostType) => (
+                <PostList key={post.id} post={post} />
+              ))}
+
               {user && (
                 <>
                   <Button

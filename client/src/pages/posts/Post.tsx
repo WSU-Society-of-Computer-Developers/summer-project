@@ -12,7 +12,7 @@ import {
   Skeleton,
   TextareaAutosize
 } from '@mui/material'
-import BasicCard from 'components/BasicCard'
+import BasicCard from 'components/PostContent'
 import { usePocket } from 'contexts/PocketContext'
 import { CommentType } from 'types/Comment'
 import { PostType } from 'types/Post'
