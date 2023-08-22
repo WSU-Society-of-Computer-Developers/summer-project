@@ -33,7 +33,9 @@ function User() {
                 <Typography><strong>Bio:</strong></Typography>*/}
                 {/* TODO: add edit functionality */}
                 {(user?.id == data?.id) ? (
-                  <Button>Edit Info</Button>
+                  <Button onClick={() => {
+                    const selection = prompt('Enter the field you would like to change (email only for now)')
+                  }}>Edit Info</Button>
                 ) : (<p></p>)}
               </Card>
 
