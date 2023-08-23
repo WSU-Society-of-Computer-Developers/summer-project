@@ -33,11 +33,18 @@ function User() {
     (async () => {
       const username = usernameRef?.current?.value;
       const email = emailRef?.current?.value;
-
+      console.log("Button is firing")
+      if(!username || !email || !userid) {
+        return alert("Either the username, email, or user id is invalid")
+      }
       try {
+        //await api.users.edit(userid, username, email)
         
       } catch(Error: any) {
-
+        console.error(error)
+      } finally {
+        console.log("Working!")
+        setModal(false)
       }
     })
   }
@@ -103,14 +110,10 @@ function User() {
                     defaultValue={data?.email}
                   />
                   <Button
+                    onClick={() => alert("this works tho...")}
                     className="mr-3 mt-2"
-                    variant="contained"
-                    onClick={handleUpdateInfoSubmit}
                   >
                     Submit
-                  </Button>
-                  <Button className="mt-2" variant="outlined">
-                    Clear
                   </Button>
                 </div>
               </Modal>
