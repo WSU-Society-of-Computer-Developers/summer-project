@@ -380,7 +380,7 @@ function Post() {
                     }
                   }}
                 >
-                  Reply
+                  Comment
                 </Button>
               </>
             )}
