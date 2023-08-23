@@ -29,6 +29,8 @@ import {
 import { LikeType } from 'types/Like'
 import { useTheme } from '@mui/material'
 import { toast } from 'react-toastify'
+import { useConfirmation } from 'contexts/ConfirmContext'
+import Spinner from 'components/Spinner'
 
 // TODO: do we want to use cache for specific pages here?
 
@@ -40,6 +42,7 @@ function Post() {
   const [isLiking, setIsLiking] = useState<boolean>(false)
   const { user, api } = usePocket()
   const replyField = React.useRef<HTMLTextAreaElement>(null)
+  const { confirm } = useConfirmation()
   const navigate = useNavigate()
 
   // this is how you would do it w/ strictly backend
@@ -94,43 +97,58 @@ function Post() {
           {user && (
             <>
               <>
+                {/* this whole liking and unliking in separate comps was a really dumb idea (by me ofc) */}
                 {likes!.some((like) => like.author == user?.id) ? (
-                  <Button
-                    size="small"
-                    onClick={async () => {
-                      try {
-                        await api.posts.unlike(
-                          likes.find((like) => like.author === user.id)!.id // find our like record id
-                        )
-                        await mutate() // triggers a reload of new data
-                        // TODO: find a better way to show updated like data
-                        // await mutate(
-                        //   () => ({
-                        //     ...{
-                        //       expand: {
-                        //         'likes(post)': postData.expand['likes(post)']
-                        //       }
-                        //     },
-                        //     ...postData
-                        //   }), // this doesnt do anything?
-                        //   {
-                        //     revalidate: true,
-                        //     populateCache: true,
-                        //     rollbackOnError: true
-                        //   }
-                        // )
-                      } catch (err: any) {
-                        console.error(err)
+                  isLiking ? (
+                    <Spinner />
+                  ) : (
+                    <Button
+                      size="small"
+                      onClick={async () => {
+                        try {
+                          setIsLiking(true)
+                          await api.posts.unlike(
+                            likes.find((like) => like.author === user.id)!.id // find our like record id
+                          )
+                          await new Promise((resolve) =>
+                            setTimeout(resolve, 2000)
+                          )
+                          setIsLiking(false)
+                          await mutate() // triggers a reload of new data
+                          // TODO: find a better way to show updated like data
+                          // await mutate(
+                          //   () => ({
+                          //     ...{
+                          //       expand: {
+                          //         'likes(post)': postData.expand['likes(post)']
+                          //       }
+                          //     },
+                          //     ...postData
+                          //   }), // this doesnt do anything?
+                          //   {
+                          //     revalidate: true,
+                          //     populateCache: true,
+                          //     rollbackOnError: true
+                          //   }
+                          // )
+                        } catch (err: any) {
+                          toast.error('Failed to unlike post')
+                        }
+                      }}
+                      startIcon={
+                        <Badge
+                          badgeContent={isLiking ? 'Unliking...' : likes.length}
+                          color="secondary"
+                        >
+                          <ThumbDownSharp />
+                        </Badge>
                       }
-                    }}
-                    startIcon={
-                      <Badge badgeContent={likes.length} color="secondary">
-                        <ThumbDownSharp />
-                      </Badge>
-                    }
-                  >
-                    Unlike
-                  </Button>
+                    >
+                      Unlike
+                    </Button>
+                  )
+                ) : isLiking ? (
+                  <Spinner />
                 ) : (
                   <Button
                     size="small"
@@ -139,26 +157,32 @@ function Post() {
                       cursor: isLiking ? 'not-allowed' : 'pointer'
                     }}
                     onClick={async () => {
-                      setIsLiking(true)
-                      await api.posts.like(postid) // TODO: add error handling
-                      // setLikes((prev) => [
-                      //   ...prev,
-                      //   {
-                      //     id: 'temp',
-                      //     author: user?.id,
-                      //     post: postid,
-                      //     created: new Date(),
-                      //     updated: new Date(),
-                      //     expand: {
-                      //       author: user,
-                      //       post: postData
-                      //     }
-                      //   }
-                      // ])
-                      // wait for 2 seconds before refreshing with sleep
-                      await new Promise((resolve) => setTimeout(resolve, 2000))
-                      setIsLiking(false)
-                      await mutate() // triggers a reload of new data
+                      try {
+                        setIsLiking(true)
+                        await api.posts.like(postid) // TODO: add error handling
+                        // setLikes((prev) => [
+                        //   ...prev,
+                        //   {
+                        //     id: 'temp',
+                        //     author: user?.id,
+                        //     post: postid,
+                        //     created: new Date(),
+                        //     updated: new Date(),
+                        //     expand: {
+                        //       author: user,
+                        //       post: postData
+                        //     }
+                        //   }
+                        // ])
+                        // wait for 2 seconds before refreshing with sleep
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 2000)
+                        )
+                        setIsLiking(false)
+                        await mutate() // triggers a reload of new data
+                      } catch (err: any) {
+                        toast.error('Failed to like post')
+                      }
                     }}
                     startIcon={
                       <Badge
@@ -226,8 +250,22 @@ function Post() {
                     <DeleteForeverOutlined
                       color="secondary"
                       className="cursor-pointer hover:text-red-400"
-                      onClick={() => {
-                        // DELETE COMMENT api
+                      onClick={async () => {
+                        const confirmation = await confirm(
+                          'Delete comment',
+                          "Are you sure you want to delete this comment? This action can't be undone."
+                        )
+                        if (confirmation) {
+                          await toast.promise(
+                            api.posts.deleteComment(comment.id),
+                            {
+                              pending: 'Deleting comment...',
+                              success: 'Comment deleted',
+                              error: 'Failed to delete comment'
+                            }
+                          )
+                          await mutate()
+                        }
                       }}
                     />
                   )}
@@ -266,11 +304,11 @@ function Post() {
                     throw new Error('Comment cannot be shorter than 5 chars')
                   }
                   // check if the same comment has already been said by the same person
-                  const existingComment = comments.find(
+                  const existingComment = comments?.find(
                     (c) => c.content == comment && c.author == user?.id
                   )
                   if (existingComment) {
-                    throw new Error('You have already said that!')
+                    throw new Error('You cannot post the same comment twice')
                   }
                   setIsReplying(true)
                   await toast.promise(api.posts.addComment(postid, comment), {
@@ -287,9 +325,7 @@ function Post() {
                   setIsReplying(false)
                   await mutate()
                 } catch (err: any) {
-                  console.error(err)
                   toast.error(err.message)
-                  // TODO: handle errors (w toast)
                 }
               }}
             >
