@@ -3,15 +3,14 @@ import PocketBase from 'pocketbase'
 import { usePocket } from 'contexts/PocketContext'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { Card, Typography, Button, Skeleton, Divider } from '@mui/material'
-import Spinner from 'components/Spinner'
+import { Card, Typography, Button, Skeleton, Modal, TextField } from '@mui/material'
 import { Margin } from '@mui/icons-material'
 
 function User() {
   // PocketBase functionality
   const { user, api, pb } = usePocket()
   const { userid } = useParams()
-  // const navigate = useNavigate()
+  
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error its technically impossible for userid to be undefined because of how our routing is setup
   const { data, error, isLoading } = useSWR(userid, () => api.users.get(userid))
@@ -22,6 +21,27 @@ function User() {
   } = useSWR(userid + '/posts', () =>
     pb.collection('posts').getList(1, 30, { filter: `author = '${userid}'` })
   )
+
+  // Edit info functionality
+  const [modal, setModal] = React.useState<boolean>(false)
+  const emailRef = React.useRef<HTMLInputElement>()
+  const usernameRef = React.useRef<HTMLInputElement>()
+
+  const handleUpdateInfoSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    (async () => {
+      const username = usernameRef?.current?.value;
+      const email = emailRef?.current?.value;
+
+      try {
+        
+      } catch(Error: any) {
+
+      }
+    })
+  }
+
   if (error) return <div>Failed to load user.</div>
   return (
     <>
@@ -52,16 +72,10 @@ function User() {
                 <Typography>
                   <strong>Email:</strong> {data?.email}
                 </Typography>
-                {/* TODO: add bio?
-                <Typography><strong>Bio:</strong></Typography>*/}
                 {/* TODO: add edit functionality */}
                 {user?.id == data?.id ? (
                   <Button
-                    onClick={() => {
-                      const selection = prompt(
-                        'Enter the field you would like to change (email only for now)'
-                      )
-                    }}
+                    onClick={() => setModal(true)}
                   >
                     Edit Info
                   </Button>
@@ -69,6 +83,37 @@ function User() {
                   <></>
                 )}
               </Card>
+              <Modal open={modal} onClose={() => setModal(false)}>
+                <div className="m-5">
+                  <h1 className="mb-5 text-2xl font-bold text-white">
+                    Edit Info
+                  </h1>
+                  <TextField
+                    fullWidth
+                    multiline
+                    label="Username"
+                    inputRef={usernameRef}
+                    defaultValue={data?.username}
+                  />
+                  <TextField
+                    fullWidth
+                    className="mb-5"
+                    label="Email"
+                    inputRef={emailRef}
+                    defaultValue={data?.email}
+                  />
+                  <Button
+                    className="mr-3 mt-2"
+                    variant="contained"
+                    onClick={handleUpdateInfoSubmit}
+                  >
+                    Submit
+                  </Button>
+                  <Button className="mt-2" variant="outlined">
+                    Clear
+                  </Button>
+                </div>
+              </Modal>
 
               <h2 className="mt-4 mb-2 text-2xl font-bold text-white">Posts</h2>
               {postsLoading ? (
@@ -90,6 +135,8 @@ function User() {
                     </Card>
                   ))}
                   {/* Polish output */}
+                  {/* Add links on posts */}
+                  {/* Edit email and username */}
                 </>
               )}
             </>

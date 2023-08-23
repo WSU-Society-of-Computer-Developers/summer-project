@@ -44,6 +44,18 @@ export class users extends pbAPI {
   get(id: UserType['id'], query?: BaseQueryParams) {
     return this.pb.collection('users').getOne<UserType>(id, query)
   }
+
+  edit(
+    id: UserType['id'], 
+    username: UserType['username'],
+    email: UserType['email']
+  ) {
+    const data = {
+      username,
+      email
+    }
+    return this.pb.collection('users').update(id, data)
+  }
 }
 
 export class posts extends pbAPI {
