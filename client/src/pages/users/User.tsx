@@ -4,7 +4,7 @@ import { usePocket } from 'contexts/PocketContext'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { Card, Typography, Button, Skeleton, Modal, TextField } from '@mui/material'
-import { Margin } from '@mui/icons-material'
+import { Link } from 'react-router-dom'
 
 function User() {
   // PocketBase functionality
@@ -121,10 +121,13 @@ function User() {
               ) : (
                 <>
                   {posts?.items?.map((post: any) => (
-                    <Card key={post.id} sx={{
+                    <Link to={`/posts/${post.id}`}><Card key={post.id} sx={{
                       marginBottom: 1,
                       marginLeft: '25%',
-                      width: '50%'
+                      width: '50%',
+                      '&:hover': {
+                        backgroundColor: '#334155'
+                      }
                     }}>
                       <Typography variant='h5'>
                         <strong>{post.title}</strong>
@@ -132,11 +135,10 @@ function User() {
                       <Typography variant='subtitle1'>
                         <strong>Created:</strong> <em>{post.created}</em>
                       </Typography>
-                    </Card>
+                    </Card></Link>
                   ))}
                   {/* Polish output */}
                   {/* Add links on posts */}
-                  {/* Edit email and username */}
                 </>
               )}
             </>
