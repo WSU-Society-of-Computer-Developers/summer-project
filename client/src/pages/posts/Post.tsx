@@ -28,6 +28,7 @@ import {
 } from '@mui/icons-material'
 import { LikeType } from 'types/Like'
 import { useTheme } from '@mui/material'
+import { toast } from 'react-toastify'
 
 // TODO: do we want to use cache for specific pages here?
 
@@ -35,6 +36,8 @@ function Post() {
   const { postid } = useParams() as { postid: string }
   const theme = useTheme()
   const [likes, setLikes] = useState<LikeType[] | []>([])
+  const [isReplying, setIsReplying] = useState<boolean>(false)
+  const [isLiking, setIsLiking] = useState<boolean>(false)
   const { user, api } = usePocket()
   const replyField = React.useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
@@ -131,8 +134,30 @@ function Post() {
                 ) : (
                   <Button
                     size="small"
+                    style={{
+                      pointerEvents: isLiking ? 'none' : 'auto',
+                      cursor: isLiking ? 'not-allowed' : 'pointer'
+                    }}
                     onClick={async () => {
+                      setIsLiking(true)
                       await api.posts.like(postid) // TODO: add error handling
+                      // setLikes((prev) => [
+                      //   ...prev,
+                      //   {
+                      //     id: 'temp',
+                      //     author: user?.id,
+                      //     post: postid,
+                      //     created: new Date(),
+                      //     updated: new Date(),
+                      //     expand: {
+                      //       author: user,
+                      //       post: postData
+                      //     }
+                      //   }
+                      // ])
+                      // wait for 2 seconds before refreshing with sleep
+                      await new Promise((resolve) => setTimeout(resolve, 2000))
+                      setIsLiking(false)
                       await mutate() // triggers a reload of new data
                     }}
                     startIcon={
@@ -172,7 +197,7 @@ function Post() {
           </Button>
         </>
       </BasicCard>
-      <h2 className="mt-3 text-4xl font-bold text-white">Comments</h2>
+      <h2 className="mt-3 text-3xl font-bold text-white">Comments</h2>
       <List>
         {comments ? (
           comments.map((comment: CommentType) => (
@@ -219,6 +244,7 @@ function Post() {
             <textarea
               id="message"
               ref={replyField}
+              disabled={isReplying}
               rows={4}
               style={{ backgroundColor: theme.palette.background.paper }}
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -226,16 +252,43 @@ function Post() {
             ></textarea>
             <Button
               startIcon={<SendSharp />}
+              style={{ pointerEvents: isReplying ? 'none' : 'auto' }}
               onClick={async () => {
                 try {
-                  // add form validation logic here
-                  await api.posts.comment(
-                    postid,
-                    replyField.current?.value || ''
+                  const comment = replyField.current?.value
+                  if (!comment) {
+                    throw new Error('Comment cannot be empty')
+                  }
+                  if (comment.length > 500) {
+                    throw new Error('Comment cannot be longer than 500 chars')
+                  }
+                  if (comment.length < 5) {
+                    throw new Error('Comment cannot be shorter than 5 chars')
+                  }
+                  // check if the same comment has already been said by the same person
+                  const existingComment = comments.find(
+                    (c) => c.content == comment && c.author == user?.id
                   )
+                  if (existingComment) {
+                    throw new Error('You have already said that!')
+                  }
+                  setIsReplying(true)
+                  await toast.promise(api.posts.addComment(postid, comment), {
+                    pending: 'Sending...',
+                    success: 'Comment added',
+                    error: {
+                      render({ data }: any) {
+                        return data.message || 'Failed to add comment'
+                      }
+                    }
+                  })
+                  // sleep for 1 seconds before refreshing
+                  await new Promise((resolve) => setTimeout(resolve, 1000))
+                  setIsReplying(false)
                   await mutate()
                 } catch (err: any) {
                   console.error(err)
+                  toast.error(err.message)
                   // TODO: handle errors (w toast)
                 }
               }}

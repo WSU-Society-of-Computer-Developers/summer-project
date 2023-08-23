@@ -57,7 +57,11 @@ function SignUp() {
       await toast.promise(register(email, password), {
         pending: 'Creating account...',
         success: 'Account created!',
-        error: 'Error creating account. Please try again later.'
+        error: {
+          render({ data }: any) {
+            return data?.message || 'Something went wrong creating your account'
+          }
+        }
       })
       navigate('/posts')
     } catch (error: any) {
@@ -67,10 +71,10 @@ function SignUp() {
           code: string
           message: string
         }>
-        alert(errors[0].message)
+        toast.error(errors[0].message)
         return
       }
-      alert(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -89,7 +93,11 @@ function SignUp() {
         .promise(login(email, password), {
           pending: 'Logging in...',
           success: 'Logged in!',
-          error: 'Error logging in. Please try again later.'
+          error: {
+            render({ data }: any) {
+              return data?.message || 'Something went wrong logging in'
+            }
+          }
         })
         .then() // Attempt a login
       navigate('/posts')
@@ -100,10 +108,10 @@ function SignUp() {
           code: string
           message: string
         }>
-        alert(errors[0].message)
+        toast.error(errors[0].message)
         return
       }
-      alert(error.message)
+      toast.error(error.message)
     }
   }
   return (
