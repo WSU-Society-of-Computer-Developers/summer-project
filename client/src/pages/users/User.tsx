@@ -3,7 +3,7 @@ import PocketBase from 'pocketbase'
 import { usePocket } from 'contexts/PocketContext'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { Card, Typography, Button, Skeleton } from '@mui/material'
+import { Card, Typography, Button, Skeleton, Divider } from '@mui/material'
 import Spinner from 'components/Spinner'
 import { Margin } from '@mui/icons-material'
 
@@ -45,7 +45,10 @@ function User() {
               <h2 className="mb-2 text-2xl font-bold text-white">
                 Personal Information
               </h2>
-              <Card>
+              <Card sx={{
+                marginLeft: '25%',
+                width: '50%'
+              }}>
                 <Typography>
                   <strong>Email:</strong> {data?.email}
                 </Typography>
@@ -73,12 +76,16 @@ function User() {
               ) : (
                 <>
                   {posts?.items?.map((post: any) => (
-                    <Card key={post.id}>
-                      <Typography>
-                        <strong>Title:</strong> {post.title}
+                    <Card key={post.id} sx={{
+                      marginBottom: 1,
+                      marginLeft: '25%',
+                      width: '50%'
+                    }}>
+                      <Typography variant='h5'>
+                        <strong>{post.title}</strong>
                       </Typography>
-                      <Typography>
-                        <strong>Created:</strong> {post.created}
+                      <Typography variant='subtitle1'>
+                        <strong>Created:</strong> <em>{post.created}</em>
                       </Typography>
                     </Card>
                   ))}
