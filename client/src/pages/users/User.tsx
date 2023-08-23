@@ -29,25 +29,22 @@ function User() {
 
   const handleUpdateInfoSubmit = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-
     (async () => {
       const username = usernameRef?.current?.value;
       const email = emailRef?.current?.value;
-      console.log("Button is firing")
       if(!username || !email || !userid) {
         return alert("Either the username, email, or user id is invalid")
       }
       try {
-        //await api.users.edit(userid, username, email)
-        
+        await api.users.edit(userid, username, email)
       } catch(Error: any) {
         console.error(error)
       } finally {
-        console.log("Working!")
-        setModal(false)
+        window.location.reload()
       }
-    })
+    })()
   }
+  
 
   if (error) return <div>Failed to load user.</div>
   return (
@@ -110,7 +107,7 @@ function User() {
                     defaultValue={data?.email}
                   />
                   <Button
-                    onClick={() => alert("this works tho...")}
+                    onClick={handleUpdateInfoSubmit}
                     className="mr-3 mt-2"
                   >
                     Submit
