@@ -3,7 +3,7 @@ import PocketBase from 'pocketbase'
 import { usePocket } from 'contexts/PocketContext'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { Card, Typography, Button, Skeleton, Modal, TextField } from '@mui/material'
+import { Card, Typography, Button, Skeleton, Modal, TextField, Box } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 function User() {
@@ -61,7 +61,6 @@ function User() {
               <Skeleton variant='rounded' height={300}/>
             </>
           ) : (
-            /* Public User Info */
             <>
               <h1 className="mb-5 text-4xl font-bold text-white">
                 {data?.username}&apos;s Page
@@ -70,13 +69,12 @@ function User() {
                 Personal Information
               </h2>
               <Card sx={{
-                marginLeft: '25%',
-                width: '50%'
+                marginLeft: {xs: '0', sm: '25%'},
+                width: {xs: '100%', sm: '50%'},
               }}>
                 <Typography>
                   <strong>Email:</strong> {data?.email}
                 </Typography>
-                {/* TODO: add edit functionality */}
                 {user?.id == data?.id ? (
                   <Button
                     onClick={() => setModal(true)}
@@ -88,7 +86,9 @@ function User() {
                 )}
               </Card>
               <Modal open={modal} onClose={() => setModal(false)}>
-                <div className="m-5">
+                <Box className="m-5" sx={{
+                  padding: 2,
+                }}>
                   <h1 className="mb-5 text-2xl font-bold text-white">
                     Edit Info
                   </h1>
@@ -112,19 +112,19 @@ function User() {
                   >
                     Submit
                   </Button>
-                </div>
+                </Box>
               </Modal>
 
               <h2 className="mt-4 mb-2 text-2xl font-bold text-white">Posts</h2>
               {postsLoading ? (
-                <div>Loading...</div>
+                <div></div>
               ) : (
                 <>
                   {posts?.items?.map((post: any) => (
-                    <Link to={`/posts/${post.id}`}><Card key={post.id} sx={{
+                    <Link to={`/posts/${post.id}`} key={post.id}><Card sx={{
                       marginBottom: 1,
-                      marginLeft: '25%',
-                      width: '50%',
+                      marginLeft: {xs: '0', sm: '25%'},
+                      width: {xs: '100%', sm: '50%'},
                       '&:hover': {
                         backgroundColor: '#334155'
                       }
@@ -138,7 +138,6 @@ function User() {
                     </Card></Link>
                   ))}
                   {/* Polish output */}
-                  {/* Add links on posts */}
                 </>
               )}
             </>
