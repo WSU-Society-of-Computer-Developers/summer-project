@@ -20,6 +20,7 @@ import { PostType } from 'types/Post'
 import useSWRMutation from 'swr/mutation'
 import ProfilePic from 'components/ProfilePic'
 import {
+  Delete,
   DeleteForeverOutlined,
   Edit,
   SendSharp,
@@ -219,6 +220,28 @@ function Post() {
                       <Button size="small">
                         <Edit />
                         &nbsp;Edit
+                      </Button>
+                    )}
+                    {user?.id == postData.author && (
+                      <Button
+                        size="small"
+                        onClick={async () => {
+                          const deletePostConfirmation = await confirm(
+                            'Delete post',
+                            "Are you sure you want to delete this post? This can't be undone."
+                          )
+                          if (deletePostConfirmation) {
+                            await toast.promise(api.posts.delete(postid), {
+                              pending: 'Deleting post...',
+                              success: 'Post deleted',
+                              error: 'Failed to delete post'
+                            })
+                            navigate('/posts')
+                          }
+                        }}
+                      >
+                        <Delete />
+                        &nbsp;Delete
                       </Button>
                     )}
                   </>
