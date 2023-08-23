@@ -3,8 +3,9 @@ import PocketBase from 'pocketbase'
 import { usePocket } from 'contexts/PocketContext'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { Card, Typography, Button } from '@mui/material'
+import { Card, Typography, Button, Skeleton } from '@mui/material'
 import Spinner from 'components/Spinner'
+import { Margin } from '@mui/icons-material'
 
 function User() {
   // PocketBase functionality
@@ -27,9 +28,15 @@ function User() {
       <div data-testid="User">
         <div className="m-5 text-center">
           {isLoading ? (
-            <Spinner />
+            <>
+              <Skeleton />
+              <Skeleton variant='rounded' height={100}/>
+              <Skeleton sx={{
+                marginTop: 3
+              }} />
+              <Skeleton variant='rounded' height={300}/>
+            </>
           ) : (
-            // ADD Skeleton  here instead of spinner
             /* Public User Info */
             <>
               <h1 className="mb-5 text-4xl font-bold text-white">
@@ -56,7 +63,7 @@ function User() {
                     Edit Info
                   </Button>
                 ) : (
-                  <p></p>
+                  <></>
                 )}
               </Card>
 
@@ -71,16 +78,7 @@ function User() {
                         <strong>Title:</strong> {post.title}
                       </Typography>
                       <Typography>
-                        <strong>Body:</strong> {post.body}
-                      </Typography>
-                      <Typography>
-                        <strong>Author:</strong> {post.author}
-                      </Typography>
-                      <Typography>
                         <strong>Created:</strong> {post.created}
-                      </Typography>
-                      <Typography>
-                        <strong>Updated:</strong> {post.updated}
                       </Typography>
                     </Card>
                   ))}
