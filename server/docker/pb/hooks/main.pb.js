@@ -18,7 +18,7 @@ onModelAfterCreate(
       const webhook = new Discord(secrets.adminWebhook);
       switch (table) {
         case "users":
-          const user = e.model; // THIS IS NOT THE USER
+          const user = e.model;
           webhook.send(
             "User registration",
             `**${user.email()}** has registered.`,
@@ -55,4 +55,42 @@ onModelAfterCreate(
   "posts",
   "likes",
   "comments"
+);
+
+onModelAfterDelete(
+  (e) => {
+    const record = e.baseModelEvent.model;
+    const Discord = require(`${__hooks}/discord.js`);
+    const secrets = require(`${__hooks}/secrets.js`);
+    const webhook = new Discord(secrets.adminWebhook);
+    try {
+      const table = e.model.tableName();
+      switch (table) {
+        case "posts":
+          webhook.send(
+            "Post deletion",
+            `**[${record.get("author")}](${secrets.baseURL}/users/${record.get(
+              "author"
+            )})** has deleted their post titled \`${record.get(
+              "title"
+            )}\`\n> ${record.get("content")}`,
+            secrets.baseURL
+          );
+          break;
+        case "comments":
+          webhook.send(
+            "Comment deletion",
+            `**[${record.get("author")}](${secrets.baseURL}/users/${record.get(
+              "author"
+            )})** commented: \`\`\`\n${record.get("content")}\`\`\``,
+            secrets.baseURL
+          );
+          break;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  "comments",
+  "posts"
 );
