@@ -94,3 +94,12 @@ onModelAfterDelete(
   "comments",
   "posts"
 );
+
+// after successful login attempt
+// TODO: make login attempts finite (w/ redis)
+// onRecordAfterAuthWithPasswordRequest((e) => {
+//     console.log(e.httpContext)
+//     console.log(e.record)
+//     console.log(e.identity)
+//     console.log(e.password)
+// })
