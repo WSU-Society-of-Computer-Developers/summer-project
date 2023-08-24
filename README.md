@@ -140,14 +140,25 @@ NODE_ENV=development
 
 > **NOTE:** Replace `get_from_discord` with the actual values from Discord in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1119060706453635204) channel
 
-4. Create a `.env` file in `client/` folder with the following contents:
+2. Create a `.env` file in `client/` folder with the following contents:
 
 ```bash
 VITE_PB_URL=http://localhost:8090
 VITE_API_URL=http://localhost:5000
 ```
 
-3. Download the `pocketbase_data.zip` from Discord in the pinned message in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1130206254422294628) channel and extract it in the `summer-project/server` folder
+3. Create a `secrets.js` in `server/docker/pb/hooks/` with the following contents:
+
+```js
+module.exports = {
+  adminWebhook: "your_discord_webhook_url",
+  baseURL: "https://web-temp1.zavaar.net",
+};
+```
+
+> **NOTE:** Replace `your_discord_webhook_url` with your Discord webhook url. To create your own, visit this [guide](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) and `Copy Webhook URL`.
+
+4. Download the `pocketbase_data.zip` from Discord in the pinned message in the [#backend-private](https://discord.com/channels/1114185335266623488/1114328051673731102/1130206254422294628) channel and extract it in the `summer-project/server` folder
 
 Your directory should now look like this:
 
@@ -160,13 +171,15 @@ summer-project/
 │  ├─ docker/
 │  │  ├─ pb/
 │  │  │  ├─ data/
-│  │  │  ┕ public/
+│  │  │  ├─ public/
+│  │  │  ├─ hooks/
+│  │  │  │  ├─ secrets.js
 │  ├─ src/
-│  ┕ .env
-┕ docker-compose.yml
+│  ├─ .env
+docker-compose.yml
 ```
 
-4. Run the dev environment
+5. Run the dev environment
 
 ```bash
 # in the summer-project folder where the docker-compose.yml file is in, run:
@@ -184,7 +197,7 @@ You should be able to now:
 ### Caveats
 
 - If you want to run the backend without docker, you will need to install [Redis](https://redis.io/) and [Node.js](https://nodejs.org/en/download/) and run them separately
-- Any changes in code for both the **client** and **server** outside their respective `src/` folder will require a docker image rebuild to reflect changes:
+- Any changes in code for both the **client** and **server** outside their respective `src/` folder will require a docker image rebuild to reflect changes. For example, if you install a new dependency, or change your `.env` file, you must rebuild. To rebuild your Docker images, run:
   - `docker-compose up --build`
 
 </details>
