@@ -12,6 +12,7 @@ import { ClientResponseError } from 'pocketbase'
 import { parseError } from 'utils'
 import PostList from 'components/PostList'
 import { PostType } from 'types/Post'
+import { toast } from 'react-toastify'
 
 function Posts() {
   const navigate = useNavigate()
@@ -26,23 +27,43 @@ function Posts() {
     ;(async () => {
       const title = titleRef?.current?.value
       const body = bodyRef?.current?.value
-      if (!title || !body) {
-        return alert("You can't leave the title or body empty")
-      }
       try {
+        if (!title || !body) {
+          throw new Error("Title or body can't be empty")
+        }
+        if (title.length < 3) {
+          throw new Error('Title must be at least 3 characters')
+        }
+        if (body.length <= 12) {
+          throw new Error('Body must be at least 12 characters')
+        }
+        if (title.length > 100) {
+          throw new Error('Title must be less than 100 characters')
+        }
+        if (body.length > 1000) {
+          throw new Error('Body must be less than 1000 characters')
+        }
+        const creationToast = toast.loading('Creating post...')
         const post = await api.posts.create(title, body)
         navigate('/posts/' + post!.id)
+        toast.update(creationToast, {
+          render: 'Created post!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000,
+          draggable: true
+        })
       } catch (error: any | ClientResponseError) {
         console.error(error)
         if (error instanceof ClientResponseError) {
           const { issues, message } = parseError(error)
           if (issues.length > 0) {
-            alert(issues.join('\n'))
+            toast.error(issues.join('\n'))
           } else {
-            alert(message)
+            toast.error(message)
           }
         } else {
-          alert('An unknown error occurred.')
+          toast.error(error?.message || 'An unknown error occurred.')
         }
       }
       // TODO: handle responses from pb functions

@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import {
   Badge,
   Button,
+  Grid,
   List,
   ListItem,
   ListItemAvatar,
@@ -19,6 +20,7 @@ import { PostType } from 'types/Post'
 import useSWRMutation from 'swr/mutation'
 import ProfilePic from 'components/ProfilePic'
 import {
+  Delete,
   DeleteForeverOutlined,
   Edit,
   SendSharp,
@@ -28,6 +30,9 @@ import {
 } from '@mui/icons-material'
 import { LikeType } from 'types/Like'
 import { useTheme } from '@mui/material'
+import { toast } from 'react-toastify'
+import { useConfirmation } from 'contexts/ConfirmContext'
+import Spinner from 'components/Spinner'
 
 // TODO: do we want to use cache for specific pages here?
 
@@ -35,8 +40,11 @@ function Post() {
   const { postid } = useParams() as { postid: string }
   const theme = useTheme()
   const [likes, setLikes] = useState<LikeType[] | []>([])
+  const [isReplying, setIsReplying] = useState<boolean>(false)
+  const [isLiking, setIsLiking] = useState<boolean>(false)
   const { user, api } = usePocket()
   const replyField = React.useRef<HTMLTextAreaElement>(null)
+  const { confirm } = useConfirmation()
   const navigate = useNavigate()
 
   // this is how you would do it w/ strictly backend
@@ -76,175 +84,309 @@ function Post() {
   const comments = postData.expand?.['comments(post)'] as CommentType[]
   return (
     <>
-      <BasicCard
-        title={postData.title}
-        // TODO: migrate to display fields instead of expansions
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        author={postData.expand.author}
-        caption={
-          postData.expand.author?.name || postData.expand.author?.email || ''
-        }
-        body={postData.content}
+      <Grid
+        direction="row"
+        justifyContent="center"
+        alignItems="flex-start"
+        spacing={2}
+        container
       >
-        <>
-          {user && (
-            <>
-              <>
-                {likes!.some((like) => like.author == user?.id) ? (
-                  <Button
-                    size="small"
-                    onClick={async () => {
-                      try {
-                        await api.posts.unlike(
-                          likes.find((like) => like.author === user.id)!.id // find our like record id
-                        )
-                        await mutate() // triggers a reload of new data
-                        // TODO: find a better way to show updated like data
-                        // await mutate(
-                        //   () => ({
-                        //     ...{
-                        //       expand: {
-                        //         'likes(post)': postData.expand['likes(post)']
-                        //       }
-                        //     },
-                        //     ...postData
-                        //   }), // this doesnt do anything?
-                        //   {
-                        //     revalidate: true,
-                        //     populateCache: true,
-                        //     rollbackOnError: true
-                        //   }
-                        // )
-                      } catch (err: any) {
-                        console.error(err)
-                      }
-                    }}
-                    startIcon={
-                      <Badge badgeContent={likes.length} color="secondary">
-                        <ThumbDownSharp />
-                      </Badge>
-                    }
-                  >
-                    Unlike
-                  </Button>
-                ) : (
-                  <Button
-                    size="small"
-                    onClick={async () => {
-                      await api.posts.like(postid) // TODO: add error handling
-                      await mutate() // triggers a reload of new data
-                    }}
-                    startIcon={
-                      <Badge
-                        badgeContent={likes.length}
-                        // anchorOrigin={{
-                        //   vertical: 'top',
-                        //   horizontal: 'left'
-                        // }}
-                        color="secondary"
-                      >
-                        <ThumbUpSharp />
-                      </Badge>
-                    }
-                  >
-                    Like
-                  </Button>
-                )}
-
-                {user?.id == postData.author && (
-                  <Button size="small">
-                    <Edit />
-                    &nbsp;Edit
-                  </Button>
-                )}
-              </>
-            </>
-          )}
-          <Button
-            onClick={() => {
-              navigator.share({ url: window.location.href }) // THIS WILL ONLY WORK ON HTTPS
-            }}
-            size="small"
+        <Grid item xs={12} md={6}>
+          <BasicCard
+            title={postData.title}
+            // TODO: migrate to display fields instead of expansions
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            author={postData.expand.author}
+            caption={
+              postData.expand.author?.name ||
+              postData.expand.author?.email ||
+              ''
+            }
+            body={postData.content}
           >
-            <Share />
-            &nbsp;Share
-          </Button>
-        </>
-      </BasicCard>
-      <h2 className="mt-3 text-4xl font-bold text-white">Comments</h2>
-      <List>
-        {comments ? (
-          comments.map((comment: CommentType) => (
-            <ListItem
-              key={comment.id}
-              // className="cursor-pointer hover:bg-slate-700"
-            >
-              <ListItemAvatar
+            <>
+              {user && (
+                <>
+                  <>
+                    {/* this whole liking and unliking in separate comps was a really dumb idea (by me ofc) */}
+                    {likes!.some((like) => like.author == user?.id) ? (
+                      isLiking ? (
+                        <Spinner />
+                      ) : (
+                        <Button
+                          size="small"
+                          onClick={async () => {
+                            try {
+                              setIsLiking(true)
+                              await api.posts.unlike(
+                                likes.find((like) => like.author === user.id)!
+                                  .id // find our like record id
+                              )
+                              await new Promise((resolve) =>
+                                setTimeout(resolve, 2000)
+                              )
+                              setIsLiking(false)
+                              await mutate() // triggers a reload of new data
+                              // TODO: find a better way to show updated like data
+                              // await mutate(
+                              //   () => ({
+                              //     ...{
+                              //       expand: {
+                              //         'likes(post)': postData.expand['likes(post)']
+                              //       }
+                              //     },
+                              //     ...postData
+                              //   }), // this doesnt do anything?
+                              //   {
+                              //     revalidate: true,
+                              //     populateCache: true,
+                              //     rollbackOnError: true
+                              //   }
+                              // )
+                            } catch (err: any) {
+                              toast.error('Failed to unlike post')
+                            }
+                          }}
+                          startIcon={
+                            <Badge
+                              badgeContent={
+                                isLiking ? 'Unliking...' : likes.length
+                              }
+                              color="secondary"
+                            >
+                              <ThumbDownSharp />
+                            </Badge>
+                          }
+                        >
+                          Unlike
+                        </Button>
+                      )
+                    ) : isLiking ? (
+                      <Spinner />
+                    ) : (
+                      <Button
+                        size="small"
+                        style={{
+                          pointerEvents: isLiking ? 'none' : 'auto',
+                          cursor: isLiking ? 'not-allowed' : 'pointer'
+                        }}
+                        onClick={async () => {
+                          try {
+                            setIsLiking(true)
+                            await api.posts.like(postid) // TODO: add error handling
+                            // setLikes((prev) => [
+                            //   ...prev,
+                            //   {
+                            //     id: 'temp',
+                            //     author: user?.id,
+                            //     post: postid,
+                            //     created: new Date(),
+                            //     updated: new Date(),
+                            //     expand: {
+                            //       author: user,
+                            //       post: postData
+                            //     }
+                            //   }
+                            // ])
+                            // wait for 2 seconds before refreshing with sleep
+                            await new Promise((resolve) =>
+                              setTimeout(resolve, 2000)
+                            )
+                            setIsLiking(false)
+                            await mutate() // triggers a reload of new data
+                          } catch (err: any) {
+                            toast.error('Failed to like post')
+                          }
+                        }}
+                        startIcon={
+                          <Badge
+                            badgeContent={likes.length}
+                            // anchorOrigin={{
+                            //   vertical: 'top',
+                            //   horizontal: 'left'
+                            // }}
+                            color="secondary"
+                          >
+                            <ThumbUpSharp />
+                          </Badge>
+                        }
+                      >
+                        Like
+                      </Button>
+                    )}
+
+                    {user?.id == postData.author && (
+                      <Button size="small">
+                        <Edit />
+                        &nbsp;Edit
+                      </Button>
+                    )}
+                    {user?.id == postData.author && (
+                      <Button
+                        size="small"
+                        onClick={async () => {
+                          const deletePostConfirmation = await confirm(
+                            'Delete post',
+                            "Are you sure you want to delete this post? This can't be undone."
+                          )
+                          if (deletePostConfirmation) {
+                            await toast.promise(api.posts.delete(postid), {
+                              pending: 'Deleting post...',
+                              success: 'Post deleted',
+                              error: 'Failed to delete post'
+                            })
+                            navigate('/posts')
+                          }
+                        }}
+                      >
+                        <Delete />
+                        &nbsp;Delete
+                      </Button>
+                    )}
+                  </>
+                </>
+              )}
+              <Button
                 onClick={() => {
-                  navigate(`/users/${comment.author}`)
+                  navigator.share({ url: window.location.href }) // THIS WILL ONLY WORK ON HTTPS
                 }}
+                size="small"
               >
-                <ProfilePic user={comment.expand.author} />
-              </ListItemAvatar>
-              <ListItemText>
-                <strong>
-                  <span
+                <Share />
+                &nbsp;Share
+              </Button>
+            </>
+          </BasicCard>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <h2 className="text-3xl font-bold text-white">Comments</h2>
+          <List>
+            {comments ? (
+              comments.map((comment: CommentType) => (
+                <ListItem
+                  key={comment.id}
+                  className="bg-[#2b2b2b] mb-2 shadow-lg rounded-sm"
+                  // className="cursor-pointer hover:bg-slate-700"
+                >
+                  <ListItemAvatar
                     onClick={() => {
                       navigate(`/users/${comment.author}`)
                     }}
-                    className="cursor-pointer hover:underline"
                   >
-                    {comment.expand.author.email}{' '}
-                  </span>
-                  {user && comment.expand.author.id == user!.id && (
-                    <DeleteForeverOutlined
-                      color="secondary"
-                      className="cursor-pointer hover:text-red-400"
-                      onClick={() => {
-                        // DELETE COMMENT api
-                      }}
+                    <ProfilePic user={comment.expand.author} />
+                  </ListItemAvatar>
+                  <ListItemText>
+                    <strong>
+                      <span
+                        onClick={() => {
+                          navigate(`/users/${comment.author}`)
+                        }}
+                        className="cursor-pointer hover:underline"
+                      >
+                        {comment.expand.author.email}{' '}
+                      </span>
+                      {user && comment.expand.author.id == user!.id && (
+                        <DeleteForeverOutlined
+                          color="secondary"
+                          className="cursor-pointer hover:text-red-400"
+                          onClick={async () => {
+                            const confirmation = await confirm(
+                              'Delete comment',
+                              "Are you sure you want to delete this comment? This action can't be undone."
+                            )
+                            if (confirmation) {
+                              await toast.promise(
+                                api.posts.deleteComment(comment.id),
+                                {
+                                  pending: 'Deleting comment...',
+                                  success: 'Comment deleted',
+                                  error: 'Failed to delete comment'
+                                }
+                              )
+                              await mutate()
+                            }
+                          }}
+                        />
+                      )}
+                    </strong>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: comment.content }}
                     />
-                  )}
-                </strong>
-                <div dangerouslySetInnerHTML={{ __html: comment.content }} />
-              </ListItemText>
-            </ListItem>
-          ))
-        ) : (
-          <div>No comments yet!</div>
-        )}
-        {user && (
-          <>
-            <textarea
-              id="message"
-              ref={replyField}
-              rows={4}
-              style={{ backgroundColor: theme.palette.background.paper }}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="Write your thoughts here..."
-            ></textarea>
-            <Button
-              startIcon={<SendSharp />}
-              onClick={async () => {
-                try {
-                  // add form validation logic here
-                  await api.posts.comment(
-                    postid,
-                    replyField.current?.value || ''
-                  )
-                  await mutate()
-                } catch (err: any) {
-                  console.error(err)
-                  // TODO: handle errors (w toast)
-                }
-              }}
-            >
-              Reply
-            </Button>
-          </>
-        )}
-      </List>
+                  </ListItemText>
+                </ListItem>
+              ))
+            ) : (
+              <div>No comments yet!</div>
+            )}
+            {user && (
+              <>
+                <textarea
+                  id="message"
+                  ref={replyField}
+                  disabled={isReplying}
+                  rows={4}
+                  style={{ backgroundColor: theme.palette.background.paper }}
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  placeholder="Write your thoughts here..."
+                ></textarea>
+                <Button
+                  startIcon={<SendSharp />}
+                  style={{ pointerEvents: isReplying ? 'none' : 'auto' }}
+                  onClick={async () => {
+                    try {
+                      const comment = replyField.current?.value
+                      if (!comment) {
+                        throw new Error('Comment cannot be empty')
+                      }
+                      if (comment.length > 500) {
+                        throw new Error(
+                          'Comment cannot be longer than 500 chars'
+                        )
+                      }
+                      if (comment.length < 5) {
+                        throw new Error(
+                          'Comment cannot be shorter than 5 chars'
+                        )
+                      }
+                      // check if the same comment has already been said by the same person
+                      const existingComment = comments?.find(
+                        (c) => c.content == comment && c.author == user?.id
+                      )
+                      if (existingComment) {
+                        throw new Error(
+                          'You cannot post the same comment twice'
+                        )
+                      }
+                      setIsReplying(true)
+                      await toast.promise(
+                        api.posts.addComment(postid, comment),
+                        {
+                          pending: 'Sending...',
+                          success: 'Comment added',
+                          error: {
+                            render({ data }: any) {
+                              return data.message || 'Failed to add comment'
+                            }
+                          }
+                        }
+                      )
+                      // sleep for 1 seconds before refreshing
+                      await new Promise((resolve) => setTimeout(resolve, 1000))
+                      setIsReplying(false)
+                      await mutate()
+                    } catch (err: any) {
+                      toast.error(err.message)
+                    }
+                  }}
+                >
+                  Comment
+                </Button>
+              </>
+            )}
+          </List>
+        </Grid>
+      </Grid>
     </>
   )
 }

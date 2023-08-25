@@ -4,6 +4,7 @@ import { Button, Container, TextField } from '@mui/material'
 import { usePocket } from '../contexts/PocketContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 // TODO: Extract to a separate file when we settle on our color palette
 const theme = createTheme({
@@ -24,7 +25,7 @@ interface FormData {
 }
 
 function SignUp() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // Method for rendering log in/sign up info
   const [isSigningUp, setContentVisible] = useState(true)
@@ -53,9 +54,16 @@ function SignUp() {
       if (password.length < 8) {
         throw new Error('Password must be at least 8 characters')
       }
-      await register(email, password)
-      navigate("/posts");
-      alert("You're signed up!") // TODO: toast notifications (react-toastify)
+      await toast.promise(register(email, password), {
+        pending: 'Creating account...',
+        success: 'Account created!',
+        error: {
+          render({ data }: any) {
+            return data?.message || 'Something went wrong creating your account'
+          }
+        }
+      })
+      navigate('/posts')
     } catch (error: any) {
       if (error.data instanceof Object) {
         // checks if its a pocketbase error
@@ -63,10 +71,10 @@ function SignUp() {
           code: string
           message: string
         }>
-        alert(errors[0].message)
+        toast.error(errors[0].message)
         return
       }
-      alert(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -81,9 +89,18 @@ function SignUp() {
     ) as unknown as FormData
 
     try {
-      await login(email, password) // Attempt a login
-      navigate("/posts");
-      alert("You're logged in!")
+      await toast
+        .promise(login(email, password), {
+          pending: 'Logging in...',
+          success: 'Logged in!',
+          error: {
+            render({ data }: any) {
+              return data?.message || 'Something went wrong logging in'
+            }
+          }
+        })
+        .then() // Attempt a login
+      navigate('/posts')
     } catch (error: any) {
       if (error.data instanceof Object) {
         // checks if its a pocketbase error
@@ -91,10 +108,10 @@ function SignUp() {
           code: string
           message: string
         }>
-        alert(errors[0].message)
+        toast.error(errors[0].message)
         return
       }
-      alert(error.message)
+      toast.error(error.message)
     }
   }
   return (

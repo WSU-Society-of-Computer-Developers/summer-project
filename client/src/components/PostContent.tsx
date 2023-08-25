@@ -8,6 +8,9 @@ import Typography from '@mui/material/Typography'
 import { Edit, Share, ThumbUpSharp } from '@mui/icons-material'
 import { usePocket } from 'contexts/PocketContext'
 import { UserType } from 'types/User'
+import { Grid } from '@mui/material'
+import { Link } from 'react-router-dom'
+import ProfilePic from './ProfilePic'
 
 interface BasicCardProps {
   title: string
@@ -28,12 +31,24 @@ export default function BasicCard({
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {caption}
-        </Typography>
+        <Grid direction="row" alignItems="center" container>
+          <Grid item sx={{ marginRight: 1 }} xs="auto">
+            <ProfilePic user={author} />
+          </Grid>
+          <Grid item xs="auto">
+            <Typography variant="h5" component="div">
+              <span>{title}</span>
+            </Typography>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              className="hover:underline"
+              gutterBottom
+            >
+              <Link to={`/user/${author.id}`}>{caption}</Link>
+            </Typography>
+          </Grid>
+        </Grid>
         <Typography variant="body2">
           <div dangerouslySetInnerHTML={{ __html: body }} />
         </Typography>
