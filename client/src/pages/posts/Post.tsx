@@ -266,7 +266,8 @@ function Post() {
               comments.map((comment: CommentType) => (
                 <ListItem
                   key={comment.id}
-                  className="bg-[#2b2b2b] mb-2 shadow-lg rounded-sm"
+                  id={comment.id}
+                  className="mb-2 rounded-sm bg-[#2b2b2b] shadow-lg"
                   // className="cursor-pointer hover:bg-slate-700"
                 >
                   <ListItemAvatar
