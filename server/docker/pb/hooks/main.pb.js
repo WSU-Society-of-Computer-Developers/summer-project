@@ -59,11 +59,11 @@ onModelAfterCreate(
 
 onModelAfterDelete(
   (e) => {
-    const record = e.baseModelEvent.model;
-    const Discord = require(`${__hooks}/discord.js`);
-    const webhook = new Discord(secrets.adminWebhook);
     try {
+      const record = e.baseModelEvent.model;
+      const Discord = require(`${__hooks}/discord.js`);
       const secrets = require(`${__hooks}/secrets.js`);
+      const webhook = new Discord(secrets.adminWebhook);
       const table = e.model.tableName();
       switch (table) {
         case "posts":
