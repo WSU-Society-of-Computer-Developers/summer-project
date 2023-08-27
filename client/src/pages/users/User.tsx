@@ -24,19 +24,17 @@ function User() {
 
   // Edit info functionality
   const [modal, setModal] = React.useState<boolean>(false)
-  const emailRef = React.useRef<HTMLInputElement>()
-  const usernameRef = React.useRef<HTMLInputElement>()
+  const nameRef = React.useRef<HTMLInputElement>()
 
   const handleUpdateInfoSubmit = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     (async () => {
-      const username = usernameRef?.current?.value;
-      const email = emailRef?.current?.value;
-      if(!username || !email || !userid) {
-        return alert("Either the username, email, or user id is invalid")
+      const name = nameRef?.current?.value;
+      if(!name || !userid) {
+        return alert("Either the name, or user id is invalid")
       }
       try {
-        await api.users.edit(userid, username, email)
+        await api.users.edit(userid, name)
       } catch(Error: any) {
         console.error(error)
       } finally {
@@ -72,6 +70,11 @@ function User() {
                 marginLeft: {xs: '0', sm: '25%'},
                 width: {xs: '100%', sm: '50%'},
               }}>
+                {data?.name !== '' ? (
+                  <Typography>
+                    <strong>Name:</strong> {data?.name}
+                  </Typography>
+                ) : ( <></> )}
                 <Typography>
                   <strong>Email:</strong> {data?.email}
                 </Typography>
@@ -81,9 +84,7 @@ function User() {
                   >
                     Edit Info
                   </Button>
-                ) : (
-                  <></>
-                )}
+                ) : ( <></> )}
               </Card>
               <Modal open={modal} onClose={() => setModal(false)}>
                 <Box className="m-5" sx={{
@@ -95,16 +96,9 @@ function User() {
                   <TextField
                     fullWidth
                     multiline
-                    label="Username"
-                    inputRef={usernameRef}
-                    defaultValue={data?.username}
-                  />
-                  <TextField
-                    fullWidth
-                    className="mb-5"
-                    label="Email"
-                    inputRef={emailRef}
-                    defaultValue={data?.email}
+                    label="Name"
+                    inputRef={nameRef}
+                    defaultValue={data?.name}
                   />
                   <Button
                     onClick={handleUpdateInfoSubmit}
