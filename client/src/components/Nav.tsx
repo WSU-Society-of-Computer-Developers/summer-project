@@ -190,27 +190,9 @@ function Nav() {
               </Menu>
             </Box>
           ) : (
-            <Button
-              onClick={async () => {
-                try {
-                  const email = prompt('Please enter your email')
-                  const password = prompt('Please enter your password')
-                  if (!email || !password) {
-                    throw new Error('Please fill out all fields')
-                  }
-                  setLoading(true)
-                  await login(email, password)
-                  alert('Login successful') // TODO: change this to toast notif
-                } catch (error: any) {
-                  alert(error.message)
-                } finally {
-                  setLoading(false)
-                }
-              }}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              Login
-            </Button>
+            <Link to="/signup">
+              <Button sx={{ my: 2, color: 'white', display: 'block' }}>Login</Button>
+            </Link>
           )}
         </Toolbar>
       </Container>

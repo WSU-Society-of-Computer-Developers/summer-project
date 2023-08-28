@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import PocketBase, { BaseQueryParams } from 'pocketbase'
+import { CommentType } from 'types/Comment'
 import { LikeType } from 'types/Like'
 import { PostType } from 'types/Post'
 import { UserType } from 'types/User'
@@ -95,6 +96,64 @@ export class posts extends pbAPI {
       content
     }
     return this.pb.collection('posts').create<PostType>(data)
+  }
+  /**
+   * @param id Post id (should be taken from the backend)
+   * @returns Promise<boolean>
+   * @example
+   * ```ts
+   * await api.posts.delete('1dew3532ed')
+   * ```
+   */
+  delete(id: PostType['id']) {
+    return this.pb.collection('posts').delete(id)
+  }
+  /**
+   *
+   * @param id Post id (should be taken from the backend)
+   * @param title Title of the post matching the id
+   * @param content Content of the post matching the id
+   * @returns Promise<Record>
+   */
+  edit(
+    id: PostType['id'],
+    title: PostType['title'],
+    content: PostType['content']
+  ) {
+    const data = {
+      title,
+      content
+    }
+    return this.pb.collection('posts').update(id, data)
+  }
+  /**
+   * Adds a comment to a specific post
+   * @param postId Post record id
+   * @param content Comment content (rich content supported)
+   * @returns Promise<CommentType>
+   */
+  addComment(postId: PostType['id'], content: string) {
+    return this.pb.collection('comments').create<CommentType>({
+      author: this.pb?.authStore?.model?.id,
+      post: postId,
+      content
+    })
+  }
+  /**
+   * Deletes a comment
+   * @param commentId comment record id
+   */
+  deleteComment(commentId: CommentType['id']) {
+    return this.pb.collection('comments').delete(commentId)
+  }
+  /**
+   * Edits a comment
+   * @param commentId comment record id
+   * @param content Comment content (rich content is supported)
+   * @returns Promise<CommentType>
+   */
+  editComment(commentId: CommentType['id'], content: CommentType['content']) {
+    return this.pb.collection('comments').update(commentId, { content })
   }
   /**
    * likes a specific post

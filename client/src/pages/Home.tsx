@@ -1,6 +1,9 @@
 import React from 'react'
+import { Button } from '@mui/material'
+import { usePocket } from '../contexts/PocketContext'
 
 function Home() {
+  const { api } = usePocket()
   return (
     <div
       data-testid="Home"

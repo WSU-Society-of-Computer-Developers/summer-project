@@ -43,7 +43,6 @@ function User() {
     })()
   }
   
-
   if (error) return <div>Failed to load user.</div>
   return (
     <>
