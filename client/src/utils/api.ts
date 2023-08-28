@@ -45,6 +45,22 @@ export class users extends pbAPI {
   get(id: UserType['id'], query?: BaseQueryParams) {
     return this.pb.collection('users').getOne<UserType>(id, query)
   }
+
+  /**
+   * 
+   * @param id The id of the user you wish to edit
+   * @param name What value you want the user's new name to be
+   * @returns RecordService.update<Record>
+   */
+  edit(
+    id: UserType['id'], 
+    name: UserType['name']
+  ) {
+    const data = { // Note: Add more fields here when there are more to edit
+      name
+    }
+    return this.pb.collection('users').update(id, data)
+  }
 }
 
 export class posts extends pbAPI {
